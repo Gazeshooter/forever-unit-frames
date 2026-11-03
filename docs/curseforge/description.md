@@ -39,7 +39,7 @@ Unit frames built for **WoW: Forever**, in the spirit of Shadowed Unit Frames. E
 - A profile per raid size and character, each with a look of its own (texture, fonts, colours, border, rounded corners). The size follows the raid instance, or is fixed.
 - Health in the class colour, a fixed colour or a gradient; name and missing health in the middle; Dead, Ghost, Offline and AFK; a power strip of adjustable height; incoming heals, shields and damage and heal numbers.
 - Dispellable debuffs as an icon in the centre or a coloured square in a corner, the cell tinted or bordered in the debuff's colour, and a debuff row. Up to five corner indicators for your heals over time and shields, by spell ID or by name from your spell book; they keep updating in combat.
-- Icons for role, raid marker, leader, master looter and ready check; members out of range fade; lines in the cell show aggro and your target.
+- Icons for role, raid marker, leader, master looter, ready check, incoming summon and another phase; members out of range fade; lines in the cell show aggro and your target.
 - **Special panels:** main tanks, main assists, your own tanks, favorites (right-click a cell to add a player) and the raid's pets, each in a panel of its own.
 - **Own panels:** up to nine panels of your own beside the main panel; drag a block from one panel to another (a "Healers" panel beside the groups).
 - **Raid tools bar** in place of Blizzard's raid manager: raid target icons, ready check, role poll, world markers, everyone assistant, party/raid conversion and the loot method.
@@ -52,12 +52,13 @@ Unit frames built for **WoW: Forever**, in the spirit of Shadowed Unit Frames. E
 ## Status
 In a "Status" tab per frame.
 - Raid target markers (skull, cross, star, ...) on every frame, in Blizzard's art, centred on the frame's top edge by default; size, anchor point and X/Y offset are configurable.
-- Group icons on the player and party frames: leader (or guide) and assistant, the ready check (waiting, ready, not ready; the result stays a few seconds after the check) and an incoming resurrection. Blizzard's own art, in a row at the frame's top left corner by default.
+- Group icons on the player and party frames: leader (or guide) and assistant, the ready check (waiting, ready, not ready; the result stays a few seconds after the check), an incoming resurrection, an incoming summon and a member in another phase. Blizzard's own art, in a row at the frame's top left corner by default.
 - Dead, ghost and offline units always grey out and show "Dead", "Ghost" or "Offline" instead of their health values.
 - Range fading: party members, their pets, your pet, the target and the focus fade while out of range (the opacity is configurable). Under General > Status > Range you choose, separately for friends and enemies, how range is measured: automatic (your class's spell, e.g. Priest: Lesser Heal / Smite, Druid: Healing Touch / Wrath, Shaman: Healing Wave / Lightning Bolt, Paladin: Holy Light, Mage: Arcane Intellect / Fireball, Warlock: Unending Breath / Shadow Bolt, Hunter: Mend Pet / Auto Shot), any spell by name or ID, or a range in yards (5 to 40). Classes without a suitable spell, such as Warriors and Rogues, use yards automatically: group members by their exact distance, others by item range checks, with the follow distance as the last resort.
 - Target highlight: the party member you have targeted gets a bright border, in a color and thickness of your choice.
 - Threat glow: the player and party frames glow in the threat colour while the unit has threat; on the target, focus and target of target it shows your threat on the unit (off by default there).
 - Dispel highlight: the border of the player and party frames takes the debuff's colour while the unit carries a debuff your class can dispel.
+- Hover highlight (off by default): the frame or raid cell under the mouse lights up.
 
 ## Auras
 - Buffs and debuffs on every frame, drawn by the game's own aura containers, so they **keep updating in combat**.
@@ -73,6 +74,7 @@ In a "Status" tab per frame.
 - Castbars for player, target, target of target, focus and party.
 - Docked below or above the frame, or detached with its own position.
 - "Always show" keeps an empty bar in the frame so nothing below it jumps.
+- Latency zone on the player castbar (off by default): the part of the bar where casting again is safe, at the bar's end, left or right, with an X offset.
 - The player castbar can run alongside Blizzard's, or hide it.
 - **Five-second rule** on the player's mana bar: a glowing spark runs along the bar for five seconds after you spend mana (direction, size and color selectable), with an optional countdown and dimming.
 - **Shield watch** (player): icons of your active shields (Power Word: Shield, Ice Barrier, Mana Shield, wards, Sacrifice, protection potions and absorb items) and the exact total of all your absorbs, live in combat, freely placed.

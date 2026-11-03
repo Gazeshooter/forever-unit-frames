@@ -70,6 +70,7 @@ Elements\UnitStatus.lua
 Elements\Range.lua
 Elements\Threat.lua
 Elements\TargetHighlight.lua
+Elements\HoverHighlight.lua
 Elements\CombatFade.lua
 Elements\Dispel.lua
 Units\Events.lua

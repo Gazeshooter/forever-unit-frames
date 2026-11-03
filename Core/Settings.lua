@@ -334,6 +334,14 @@ Settings.Define({ key = "castbarHeight", code = "CH", scope = "frame", only = CA
 Settings.Define({ key = "castbarIcon", code = "CI", scope = "frame", only = CASTBAR, type = "bool", default = true })
 Settings.Define({ key = "castbarName", code = "CN", scope = "frame", only = CASTBAR, type = "bool", default = true })
 Settings.Define({ key = "castbarTime", code = "CT", scope = "frame", only = CASTBAR, type = "bool", default = true })
+-- Latency zone on the player's castbar: where casting again is safe. END
+-- is the side the bar runs out on (right for a cast, left for a channel).
+local CASTBAR_LATENCY = { player = true }
+Settings.Define({ key = "castbarLatency", code = "CV", scope = "frame", only = CASTBAR_LATENCY, type = "bool", default = false })
+Settings.Define({ key = "castbarLatencyPoint", code = "CW", scope = "frame", only = CASTBAR_LATENCY, type = "enum",
+    values = { "END", "LEFT", "RIGHT" }, default = "END" })
+Settings.Define({ key = "castbarLatencyX", code = "CZ", scope = "frame", only = CASTBAR_LATENCY, type = "int", min = -200, max = 200,
+    default = 0 })
 -- Keeps an empty bar in place while nothing is cast, so what is anchored
 -- below it does not jump.
 Settings.Define({ key = "castbarAlwaysShow", code = "CA", scope = "frame", only = CASTBAR, type = "bool", default = false })
@@ -796,6 +804,8 @@ local GROUP = { player = true, party = true }
 Settings.Define({ key = "groupLeader", code = "LL", scope = "frame", only = GROUP, type = "bool", default = true })
 Settings.Define({ key = "groupReadyCheck", code = "LR", scope = "frame", only = GROUP, type = "bool", default = true })
 Settings.Define({ key = "groupResurrect", code = "LZ", scope = "frame", only = GROUP, type = "bool", default = true })
+Settings.Define({ key = "groupSummon", code = "LM", scope = "frame", only = GROUP, type = "bool", default = true })
+Settings.Define({ key = "groupPhase", code = "LP", scope = "frame", only = GROUP, type = "bool", default = true })
 -- The assigned role (tank, healer, damage) as a fourth icon in the row, in
 -- the raid cells' art; off by default.
 Settings.Define({ key = "groupRole", code = "LG", scope = "frame", only = GROUP, type = "bool", default = false })
@@ -871,6 +881,8 @@ Settings.Define({ key = "targetHighlightColor", code = "TK", scope = "inherit", 
 -- The band's thickness in pixels.
 Settings.Define({ key = "targetHighlightSize", code = "TJ", scope = "frame", only = { party = true }, type = "int",
     min = 1, max = 12, default = 3 })
+-- The frame under the mouse lights up (Elements/HoverHighlight.lua).
+Settings.Define({ key = "hoverHighlight", code = "HV", scope = "frame", type = "bool", default = false })
 -- Player frame out of combat (Elements/CombatFade.lua): faded to this
 -- opacity while idle.
 Settings.Define({ key = "playerFadeOOC", code = "WF", scope = "frame", only = { player = true }, type = "bool",

@@ -91,7 +91,7 @@ do
     end
     H.check("a plain holder", g.holder._kind, "Frame")
     H.check("child of the frame", g.holder:GetParent(), f)
-    H.check("room for three", g.holder:GetWidth(), 16 * 3 + 2 * 2)
+    H.check("room for five", g.holder:GetWidth(), 16 * 5 + 2 * 4)
     H.check("one icon high", g.holder:GetHeight(), 16)
     local p = point(g.holder, "LEFT")
     H.check("on the frame", p[2], f)
@@ -107,9 +107,11 @@ do
     -- One group switched off: the row shrinks.
     local C = ns.Config
     C.Set("player", "groupResurrect", false)
-    H.check("two slots", g.holder:GetWidth(), 16 * 2 + 2)
+    H.check("four slots", g.holder:GetWidth(), 16 * 4 + 2 * 3)
     C.Set("player", "groupLeader", false)
     C.Set("player", "groupReadyCheck", false)
+    C.Set("player", "groupSummon", false)
+    C.Set("player", "groupPhase", false)
     H.check("all off: hidden", g.holder:IsShown(), false)
     C.Set("player", "groupLeader", true)
     C.Set("player", "groupReadyCheck", true)

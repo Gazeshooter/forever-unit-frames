@@ -111,6 +111,8 @@ Where the marker (Marker style) sits: **Automatic** is its usual place, on the p
 <tr><td><b>Leader and assistant</b></td><td>The group's leader (or guide) and assistants</td><td>On, Off</td><td>On</td><td>Player, Party</td></tr>
 <tr><td><b>Ready check</b></td><td>Waiting, ready or not ready; stays a few seconds after the check</td><td>On, Off</td><td>On</td><td>Player, Party</td></tr>
 <tr><td><b>Incoming resurrection</b></td><td></td><td>On, Off</td><td>On</td><td>Player, Party</td></tr>
+<tr><td><b>Incoming summon</b></td><td></td><td>On, Off</td><td>On</td><td>Player, Party</td></tr>
+<tr><td><b>In another phase</b></td><td></td><td>On, Off</td><td>On</td><td>Player, Party</td></tr>
 <tr><td><b>Role (tank, healer, damage)</b></td><td>The role assigned in the group</td><td>On, Off</td><td>Off</td><td>Player, Party</td></tr>
 <tr><td><b>Icon size</b></td><td></td><td>8 – 48</td><td>16</td><td>Player, Party</td></tr>
 <tr><td><b>Point on the frame</b></td><td></td><td>Any of the 9 points (corners, edges, center)</td><td>Top left</td><td>Player, Party</td></tr>
@@ -148,6 +150,7 @@ Where the marker (Marker style) sits: **Automatic** is its usual place, on the p
 <tr><td><b>Target highlight color</b></td><td></td><td>Color</td><td><code>#ffffff</code>, 90 % opaque</td><td>Party</td></tr>
 <tr><td><b>Thickness</b></td><td></td><td>1 – 12</td><td>6</td><td>Party</td></tr>
 <tr><td><b>Tint border on dispellable debuff</b></td><td>In the debuff's color while it carries one you can dispel</td><td>On, Off</td><td>On</td><td>Player, Party</td></tr>
+<tr><td><b>Highlight under the mouse</b></td><td>The frame under the mouse lights up</td><td>On, Off</td><td>Off</td><td>all</td></tr>
 </tbody>
 </table>
 

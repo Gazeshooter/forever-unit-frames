@@ -111,7 +111,9 @@ Schema.TABS = {
         icon("leader", "leaderIcon"),
         icon("looter", "looterIcon"),
         icon("readyCheck", "readyCheckIcon"),
-        { id = "states", keys = { "rangeFade", "rangeAlpha", "aggroBorder", "targetBorder" } },
+        icon("summon", "summonIcon"),
+        icon("phase", "phaseIcon"),
+        { id = "states", keys = { "rangeFade", "rangeAlpha", "aggroBorder", "targetBorder", "hoverHighlight" } },
     } },
     { id = "layout", sections = {
         { id = "grouping", keys = { "groupBy", "sortBy", "classOrder", "hideEmpty", "blockTitles" } },
@@ -160,7 +162,7 @@ for _, ind in ipairs(ns.Raid.INDICATORS) do
         SHARED["indicator" .. ind.name .. part] = "indicator" .. part
     end
 end
-for _, key in ipairs({ "roleIcon", "raidMarker", "leaderIcon", "looterIcon", "readyCheckIcon" }) do
+for _, key in ipairs({ "roleIcon", "raidMarker", "leaderIcon", "looterIcon", "readyCheckIcon", "summonIcon", "phaseIcon" }) do
     SHARED[key], SHARED[key .. "Point"] = "iconShow", "iconPoint"
 end
 local PANEL_WORDS = { Show = "panelShow", Title = "panelTitle", PerLine = "cellsPerLine", Growth = "cellGrowth",

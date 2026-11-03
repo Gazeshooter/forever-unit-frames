@@ -6,7 +6,7 @@ Role, raid target marker, leader, master looter and ready check icons, and the s
 
 The **Icons & states** tab of the raid options window (`/fuf raid`), under a raid size in the top bar (General | 10 | 20 | 40 | Profiles). Each raid size (10, 20, 40) has a profile of its own: the size picked at the top is the one you edit; a default that differs per size is listed per size.
 
-**On this page:** [Icons](#icons) · [Role](#role) · [Raid target marker](#raid-target-marker) · [Leader and assistants](#leader-and-assistants) · [Master looter](#master-looter) · [Ready check](#ready-check) · [States](#states)
+**On this page:** [Icons](#icons) · [Role](#role) · [Raid target marker](#raid-target-marker) · [Leader and assistants](#leader-and-assistants) · [Master looter](#master-looter) · [Ready check](#ready-check) · [Summon](#summon) · [Other phase](#other-phase) · [States](#states)
 
 ## Icons
 
@@ -68,6 +68,26 @@ The **Icons & states** tab of the raid options window (`/fuf raid`), under a rai
 </tbody>
 </table>
 
+## Summon
+
+<table>
+<thead><tr><th align="left" width="190">Option</th><th align="left" width="350">What it does</th><th align="left" width="190">Choices</th><th align="left" width="160">Default</th></tr></thead>
+<tbody>
+<tr><td><b>Show</b></td><td></td><td>On, Off</td><td>On</td></tr>
+<tr><td><b>Position</b></td><td></td><td>Any of the 9 points (corners, edges, center)</td><td>Center</td></tr>
+</tbody>
+</table>
+
+## Other phase
+
+<table>
+<thead><tr><th align="left" width="190">Option</th><th align="left" width="350">What it does</th><th align="left" width="190">Choices</th><th align="left" width="160">Default</th></tr></thead>
+<tbody>
+<tr><td><b>Show</b></td><td></td><td>On, Off</td><td>On</td></tr>
+<tr><td><b>Position</b></td><td></td><td>Any of the 9 points (corners, edges, center)</td><td>Bottom</td></tr>
+</tbody>
+</table>
+
 ## States
 
 <table>
@@ -77,6 +97,7 @@ The **Icons & states** tab of the raid options window (`/fuf raid`), under a rai
 <tr><td><b>Opacity out of range (%)</b></td><td></td><td>0 – 100</td><td>40</td></tr>
 <tr><td><b>Red line on aggro</b></td><td>Along the inside of the cell</td><td>On, Off</td><td>On</td></tr>
 <tr><td><b>Light line on your target</b></td><td></td><td>On, Off</td><td>On</td></tr>
+<tr><td><b>Highlight under the mouse</b></td><td></td><td>On, Off</td><td>Off</td></tr>
 </tbody>
 </table>
 

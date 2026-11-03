@@ -179,7 +179,8 @@ local RULES = {
     { on("buffsCasterBorder"), { "buffsOwnBorderColor", "buffsOtherBorderColor" } },
     -- Hiding Blizzard's castbar does not depend on ours.
     { on("castbarEnabled"), { "castbarAlwaysShow", "castbarPosition", "castbarDock", "castbarHeight", "castbarIcon",
-        "castbarName", "castbarTime", "castbarX", "castbarY" } },
+        "castbarName", "castbarTime", "castbarLatency", "castbarLatencyPoint", "castbarLatencyX", "castbarX", "castbarY" } },
+    { on("castbarLatency"), { "castbarLatencyPoint", "castbarLatencyX" } },
     { is("castbarPosition", "DETACHED"), { "castbarX", "castbarY" } },
     { on("threatBar"), { "threatBarHeight", "threatBarWarn", "threatBarRole", "threatBarSolo" } },
     { on("combatIcon"), iconRows("combatIcon") },
@@ -194,7 +195,7 @@ local RULES = {
     -- The swords: the combat icon's (other frames), the status icon's
     -- (the player's).
     { anyOn({ "combatIcon", "statusCombat" }), { "combatAnimation" } },
-    { anyOn({ "groupLeader", "groupReadyCheck", "groupResurrect", "groupRole" }), iconRows("groupIcon") },
+    { anyOn({ "groupLeader", "groupReadyCheck", "groupResurrect", "groupSummon", "groupPhase", "groupRole" }), iconRows("groupIcon") },
     { on("rangeFade"), { "rangeAlpha" } },
     { on("targetHighlight"), { "targetHighlightColor", "targetHighlightSize" } },
     { on("combatFeedback"), { "combatFeedbackPoint", "combatFeedbackX", "combatFeedbackY", "combatFeedbackFont",

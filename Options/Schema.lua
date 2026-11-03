@@ -165,14 +165,15 @@ Schema.FRAME = {
             "eliteMarkerPoint", "eliteMarkerX", "eliteMarkerY", "eliteMarkerSize" } },
         { id = "petHappiness", keys = { "petHappiness", "petHappinessHideHappy", "petHappinessSize",
             "petHappinessFramePoint", "petHappinessPoint", "petHappinessX", "petHappinessY" } },
-        { id = "groupIcons", keys = { "groupLeader", "groupReadyCheck", "groupResurrect", "groupRole", "groupIconSize",
+        { id = "groupIcons", keys = { "groupLeader", "groupReadyCheck", "groupResurrect", "groupSummon", "groupPhase", "groupRole",
+            "groupIconSize",
             "groupIconFramePoint", "groupIconPoint", "groupIconX", "groupIconY" } },
         { id = "comboPoints", keys = { "comboPoints", "comboHideEmpty", "comboShape", "comboSize", "comboSpacing", "comboColor",
             "comboFramePoint", "comboPoint", "comboX", "comboY" } },
         -- What lights the frame up: threat, the party's target, a debuff
         -- you can dispel.
         { id = "highlights", keys = { "threatGlow", "targetHighlight", "targetHighlightColor", "targetHighlightSize",
-            "dispelHighlight" } },
+            "dispelHighlight", "hoverHighlight" } },
         -- Fading comes last: how the frame behaves, not what it shows.
         { id = "range", keys = { "rangeFade", "rangeAlpha" } },
         { id = "outOfCombat", keys = { "playerFadeOOC", "playerFadeAlpha", "playerFadeTarget",
@@ -181,7 +182,8 @@ Schema.FRAME = {
     { id = "castbar", sections = {
         { id = "castbar", keys = { "castbarEnabled", "castbarAlwaysShow", "hideBlizzardCastbar", "castbarPosition", "castbarDock",
             "castbarHeight" } },
-        { id = "castbarContent", keys = { "castbarIcon", "castbarName", "castbarTime" } },
+        { id = "castbarContent", keys = { "castbarIcon", "castbarName", "castbarTime", "castbarLatency", "castbarLatencyPoint",
+            "castbarLatencyX" } },
         { id = "castbarDetached", keys = { "castbarX", "castbarY" } },
         { id = "threatBar", keys = { "threatBar", "threatBarHeight", "threatBarWarn", "threatBarRole",
             "threatBarSolo" } },

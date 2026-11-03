@@ -28,6 +28,9 @@ Castbar.CAST_COLOR = { 1.0, 0.7, 0.0 }
 Castbar.CHANNEL_COLOR = { 0.3, 0.8, 0.3 }
 -- Blizzard's own pet bar uses it (PET_WAIT_TEXTURE), so the file exists.
 Castbar.PREVIEW_ICON = "Interface\\Icons\\Spell_Nature_TimeStop"
+Castbar.LATENCY_COLOR = { 1, 0, 0, 0.55 }
+-- Test mode: the share of the bar the sample's latency zone takes.
+Castbar.PREVIEW_LATENCY = 0.15
 
 local STOP_EVENTS = {
     UNIT_SPELLCAST_STOP = true, UNIT_SPELLCAST_FAILED = true,
@@ -86,7 +89,43 @@ end
 -- left edge to the fill's left edge, in the channel colour. The background
 -- keeps its own colour either way, translucency included. No arithmetic
 -- on cast values: the fill texture does the measuring.
+local function latencyOn(scope)
+    return Settings.AppliesTo(Settings.Get("castbarLatency"), scope) and Config.Get(scope, "castbarLatency")
+end
+
+-- The share of the bar your latency takes, nil without a readable cast.
+local function latencyShare(bar)
+    if bar.preview then return Castbar.PREVIEW_LATENCY end
+    local cast = bar.cast
+    if not cast then return nil end
+    local startMs, endMs = Secrets.Number(cast.startMs), Secrets.Number(cast.endMs)
+    if not startMs or not endMs or endMs <= startMs then return nil end
+    local _, _, home, world = GetNetStats()
+    local latency = Secrets.Number(world) or Secrets.Number(home) or 0
+    return math.min(1, latency / (endMs - startMs))
+end
+
+-- The zone runs the bar's full height, from the chosen side plus its offset.
+local function paintLatency(bar)
+    local scope, lag = bar.scope, bar.lag
+    local share = latencyOn(scope) and latencyShare(bar)
+    local width = share and ns.Pixel.Snap(bar:GetWidth() * share) or 0
+    if width < 1 then
+        lag:Hide()
+        return
+    end
+    local side = Config.Get(scope, "castbarLatencyPoint")
+    if side == "END" then side = bar.cast and bar.cast.channel and "LEFT" or "RIGHT" end
+    local x = ns.Pixel.Snap(Config.Get(scope, "castbarLatencyX"))
+    lag:ClearAllPoints()
+    lag:SetPoint("TOP" .. side, bar, "TOP" .. side, x, 0)
+    lag:SetPoint("BOTTOM" .. side, bar, "BOTTOM" .. side, x, 0)
+    lag:SetWidth(width)
+    lag:Show()
+end
+
 local function paint(bar)
+    paintLatency(bar)
     local bg = Config.Get(bar.scope, "backgroundColor")
     bar.bg:SetVertexColor(bg[1], bg[2], bg[3], bg[4])
     bar.iconBg:SetColorTexture(bg[1], bg[2], bg[3], bg[4])
@@ -222,6 +261,11 @@ function Castbar.Build(frame)
     bar.bg:SetAllPoints(bar)
     bar.remain = bar:CreateTexture(nil, "BORDER")
     bar.remain:Hide()
+    -- Above the fill, below the texts.
+    bar.lag = bar:CreateTexture(nil, "ARTWORK", nil, 1)
+    local lagColor = Castbar.LATENCY_COLOR
+    bar.lag:SetColorTexture(lagColor[1], lagColor[2], lagColor[3], lagColor[4])
+    bar.lag:Hide()
     -- Fills the icon slot while no spell icon is shown.
     bar.iconBg = bar:CreateTexture(nil, "BACKGROUND")
     bar.icon = bar:CreateTexture(nil, "ARTWORK")
@@ -230,7 +274,7 @@ function Castbar.Build(frame)
     -- The castbar's whole rectangle, icon included: a detached castbar's
     -- corners are rounded and its border goes around it.
     bar.box = CreateFrame("Frame", nil, bar)
-    for _, texture in ipairs({ bar.bg, bar.remain, bar.iconBg, bar.icon }) do ns.Corners.Add(bar, texture) end
+    for _, texture in ipairs({ bar.bg, bar.remain, bar.lag, bar.iconBg, bar.icon }) do ns.Corners.Add(bar, texture) end
     ns.Corners.Add(bar, function() return bar:GetStatusBarTexture() end)
     bar.clip = ns.Corners.Clipper(bar)
     bar:SetScript("OnUpdate", Castbar.OnUpdate)

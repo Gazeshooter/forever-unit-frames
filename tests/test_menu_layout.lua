@@ -96,8 +96,8 @@ H.check("corners with the border", shown("target", "layout", "border"),
 H.check("General: corners with the border", keysOf("general", "appearance", "border"),
     "borderShow,borderStyle,borderSize,borderPadding,borderColor,cornerRadius")
 H.check("party highlights", shown("party", "status", "highlights"),
-    "threatGlow,targetHighlight,targetHighlightColor,targetHighlightSize,dispelHighlight")
-H.check("player highlights", shown("player", "status", "highlights"), "threatGlow,dispelHighlight")
+    "threatGlow,targetHighlight,targetHighlightColor,targetHighlightSize,dispelHighlight,hoverHighlight")
+H.check("player highlights", shown("player", "status", "highlights"), "threatGlow,dispelHighlight,hoverHighlight")
 H.check("player: swords after the combat switch", shown("player", "status", "statusIcons"),
     "statusCombat,combatAnimation,statusResting,statusSize,statusFramePoint,statusPoint,statusX,statusY")
 H.check("player: no combat icon section", shown("player", "status", "combatIcon"), "")

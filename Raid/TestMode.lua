@@ -46,7 +46,7 @@ Test.MARKERS = { [1] = 8, [6] = 1 }
 -- check under way.
 Test.GROUP_ICONS = {
     [1] = { leader = "leader", looter = true, ready = "ready" }, [2] = { leader = "assistant", ready = "ready" },
-    [4] = { ready = "notready" }, [5] = { ready = "waiting" },
+    [4] = { ready = "notready" }, [5] = { ready = "waiting" }, [6] = { summon = "pending" }, [7] = { phase = true },
 }
 
 local own = false    -- the raid window's switch

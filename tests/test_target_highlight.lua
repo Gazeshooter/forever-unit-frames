@@ -89,5 +89,5 @@ do
         end
     end
     H.check("with the other highlights on the status tab", found,
-        "status:threatGlow,targetHighlight,targetHighlightColor,targetHighlightSize,dispelHighlight")
+        "status:threatGlow,targetHighlight,targetHighlightColor,targetHighlightSize,dispelHighlight,hoverHighlight")
 end

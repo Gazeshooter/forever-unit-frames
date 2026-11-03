@@ -70,7 +70,8 @@ end
 
 -- The icons a cell places on their own (Elements/GroupIcons.lua asks):
 -- point and offsets, nil while the icon is off.
-Cell.ICON_KEYS = { leader = "leaderIcon", looter = "looterIcon", ready = "readyCheckIcon", role = "roleIcon" }
+Cell.ICON_KEYS = { leader = "leaderIcon", looter = "looterIcon", ready = "readyCheckIcon", role = "roleIcon",
+    summon = "summonIcon", phase = "phaseIcon" }
 function Cell.IconPoint(_, name)
     local key = Cell.ICON_KEYS[name]
     if not key or not get(key) then return nil end
@@ -121,6 +122,9 @@ local MAPPED = {
     raidMarkerY = insetY("raidMarkerPoint"),
     groupLeader = function() return get("leaderIcon") end,
     groupReadyCheck = function() return get("readyCheckIcon") end,
+    groupSummon = function() return get("summonIcon") end,
+    groupPhase = function() return get("phaseIcon") end,
+    hoverHighlight = function() return get("hoverHighlight") end,
     groupIconSize = function() return get("iconSize") end,
     rangeFade = function() return get("rangeFade") end,
     rangeAlpha = function() return get("rangeAlpha") end,

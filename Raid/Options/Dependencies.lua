@@ -27,7 +27,7 @@ local function anyOn(keys)
     end
 end
 
-local ICON_SWITCHES = { "roleIcon", "raidMarker", "leaderIcon", "looterIcon", "readyCheckIcon" }
+local ICON_SWITCHES = { "roleIcon", "raidMarker", "leaderIcon", "looterIcon", "readyCheckIcon", "summonIcon", "phaseIcon" }
 
 -- { test, rows }: every test of a row must pass.
 local RULES = {
@@ -61,7 +61,7 @@ local RULES = {
     { on("debuffRow"), { "debuffCount", "debuffSize" } },
     -- Raid/BuffCells.lua: the buff square (a character switch) takes
     -- the icons' size too.
-    { anyOn({ "roleIcon", "raidMarker", "leaderIcon", "looterIcon", "readyCheckIcon", "buffCellIcon" }),
+    { anyOn({ "roleIcon", "raidMarker", "leaderIcon", "looterIcon", "readyCheckIcon", "summonIcon", "phaseIcon", "buffCellIcon" }),
         { "iconSize" } },
     { on("roleIcon"), { "roleIconDamager" } },
     { on("rangeFade"), { "rangeAlpha" } },

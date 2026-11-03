@@ -30,6 +30,9 @@ The **Castbar** tab on each frame's page in `/fuf`. The last column says which f
 <tr><td><b>Spell icon</b></td><td></td><td>On, Off</td><td>On</td><td>all</td></tr>
 <tr><td><b>Spell name</b></td><td></td><td>On, Off</td><td>On</td><td>all</td></tr>
 <tr><td><b>Cast time</b></td><td></td><td>On, Off</td><td>On</td><td>all</td></tr>
+<tr><td><b>Latency zone</b></td><td>The part of the bar where casting again is safe</td><td>On, Off</td><td>Off</td><td>Player</td></tr>
+<tr><td><b>Position in the bar</b></td><td>Bar end: right for casts, left for channels</td><td>Bar end, Left, Right</td><td>Bar end</td><td>Player</td></tr>
+<tr><td><b>Offset X</b></td><td></td><td>-200 – 200</td><td>0</td><td>Player</td></tr>
 </tbody>
 </table>
 

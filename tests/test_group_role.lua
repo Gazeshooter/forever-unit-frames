@@ -45,7 +45,7 @@ do
         end
     end
     H.checkTrue("in the group icons' section after the others",
-        keys and keys:find("groupResurrect,groupRole,groupIconSize", 1, true))
+        keys and keys:find("groupPhase,groupRole,groupIconSize", 1, true))
     -- One art for both: the raid cells' role icons.
     H.check("the raid cells' art", ns.RaidRole.ATLAS, ns.GroupIcons.ROLE_ATLAS)
     H.check("healer art", ns.GroupIcons.ROLE_ATLAS.HEALER, "UI-LFG-RoleIcon-Healer-Micro-GroupFinder")
@@ -72,9 +72,9 @@ do
     H.check("healer art", a.role._atlas, "UI-LFG-RoleIcon-Healer-Micro-GroupFinder")
     H.check("player: tank", p.role._atlas, "UI-LFG-RoleIcon-Tank-Micro-GroupFinder")
     H.check("no role: none", b.role:IsShown(), false)
-    -- A slot of its own: the row is four icons wide.
+    -- A slot of its own: the row is six icons wide.
     local size = ns.Pixel.Snap(16, nil, 1)
-    H.check("row of four", a.holder:GetWidth(), ns.Layout.IconRowWidth(4, size, ns.Pixel.Snap(2)))
+    H.check("row of six", a.holder:GetWidth(), ns.Layout.IconRowWidth(6, size, ns.Pixel.Snap(2)))
     H.check("role sized like the others", a.role:GetWidth(), size)
     -- Alone in the row: packed to the anchor's side like the others.
     H.check("first slot when alone", point(a.role, "TOPLEFT")[4], 0)
@@ -100,10 +100,10 @@ do
     M.FireEvent("GROUP_ROSTER_UPDATE")
     H.checkTrue("readable again", a.role:IsShown())
 
-    -- Switched off: gone, the row three wide again.
+    -- Switched off: gone, the row five wide again.
     C.Set("party", "groupRole", false)
     H.check("off again", a.role:IsShown(), false)
-    H.check("row of three", a.holder:GetWidth(), ns.Layout.IconRowWidth(3, size, ns.Pixel.Snap(2)))
+    H.check("row of five", a.holder:GetWidth(), ns.Layout.IconRowWidth(5, size, ns.Pixel.Snap(2)))
 
     -- Test mode: the samples' roles.
     C.Set("party", "groupRole", true)

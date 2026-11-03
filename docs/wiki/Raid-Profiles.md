@@ -35,6 +35,8 @@ Copies one size onto another as it shows. **Everything** copies every setting; *
 - **Leader and assistants**: Position
 - **Master looter**: Position
 - **Ready check**: Position
+- **Summon**: Position
+- **Other phase**: Position
 - **Grouping**: Hide empty blocks, Block titles
 - **Blocks and cells**: Blocks, Blocks per line, Block spacing, Cells grow, Cells per line, Cell spacing
 - **Position**: Position X, Position Y

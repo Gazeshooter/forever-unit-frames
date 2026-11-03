@@ -12,6 +12,9 @@ local _, ns = ...
 --   not ready (CompactUnitFrame_FinishReadyCheck).
 -- * incoming resurrection: the raid frames' centre icon
 --   (CompactUnitFrame.lua, "IncomingResurrection").
+-- * incoming summon and another phase: the raid frames' centre icons
+--   (CompactUnitFrame.lua, "IncomingSummon*", "InOtherPhase"), the phase only
+--   within DISTANCE_THRESHOLD_SQUARED of you, as there.
 -- * role (off by default): the assigned role in the group finder's small
 --   role icons (GetMicroIconForRole, Blizzard_SharedXMLBase/
 --   TextureUtil.lua), the raid cells' too (Raid/CellRole.lua).
@@ -35,7 +38,7 @@ local _, ns = ...
 -- One row on a plain holder like the player's status icons: a slot for
 -- each group switched on, the icons that show packed towards the anchor
 -- point's side. Textures of a plain frame: they may change in combat.
-local GroupIcons = { name = "GroupIcons", unitEvents = { "INCOMING_RESURRECT_CHANGED" } }
+local GroupIcons = { name = "GroupIcons", unitEvents = { "INCOMING_RESURRECT_CHANGED", "INCOMING_SUMMON_CHANGED", "UNIT_PHASE" } }
 ns.GroupIcons = GroupIcons
 
 local Config, Pixel, Layout, Secrets, Settings = ns.Config, ns.Pixel, ns.Layout, ns.Secrets, ns.Settings
@@ -46,11 +49,16 @@ GroupIcons.LEADER = { leader = { atlas = "UI-HUD-UnitFrame-Player-Group-LeaderIc
 GroupIcons.READY = { ready = "UI-LFG-ReadyMark-Raid", notready = "UI-LFG-DeclineMark-Raid",
     waiting = "UI-LFG-PendingMark-Raid" }
 GroupIcons.REZ_ATLAS = "RaidFrame-Icon-Rez"
+GroupIcons.SUMMON = { pending = "RaidFrame-Icon-SummonPending", accepted = "RaidFrame-Icon-SummonAccepted",
+    declined = "RaidFrame-Icon-SummonDeclined" }
+GroupIcons.PHASE_ATLAS = "RaidFrame-Icon-Phasing"
+-- DISTANCE_THRESHOLD_SQUARED (CompactUnitFrame.lua).
+GroupIcons.PHASE_DISTANCE_SQUARED = 250 * 250
 GroupIcons.ROLE_ATLAS = { TANK = "UI-LFG-RoleIcon-Tank-Micro-GroupFinder",
     HEALER = "UI-LFG-RoleIcon-Healer-Micro-GroupFinder", DAMAGER = "UI-LFG-RoleIcon-DPS-Micro-GroupFinder" }
 GroupIcons.LOOTER_TEXTURE = "Interface\\AddOns\\ForeverUnitFrames\\Media\\MasterLooter.tga"
 -- The icons a raid cell places on their own.
-GroupIcons.OWN_POINTS = { "leader", "looter", "ready" }
+GroupIcons.OWN_POINTS = { "leader", "looter", "ready", "summon", "phase" }
 -- CUF_READY_CHECK_DECAY_TIME (CompactUnitFrame.lua).
 GroupIcons.READY_DECAY = 11
 -- Above the text overlay (+10) and the aura holders (+12), below the class
@@ -66,8 +74,8 @@ GroupIcons.SAMPLES = { player = { leader = "leader", ready = "ready", role = "TA
 GroupIcons.PARTY_SAMPLES = {
     [1] = { ready = "ready", role = "HEALER" },
     [2] = { ready = "notready", rez = true, role = "DAMAGER" },
-    [3] = { role = "DAMAGER" },
-    [4] = { ready = "waiting", role = "DAMAGER" },
+    [3] = { role = "DAMAGER", summon = "pending" },
+    [4] = { ready = "waiting", role = "DAMAGER", phase = true },
 }
 
 -- Set from READY_CHECK_FINISHED until the result has decayed: a table
@@ -82,11 +90,12 @@ function GroupIcons.Build(frame)
     if not (GroupIcons.Applies(frame.key) or frame.iconPoint) then return end
     local holder = CreateFrame("Frame", nil, frame)
     local g = { holder = holder }
-    for _, name in ipairs({ "leader", "ready", "rez", "role" }) do
+    for _, name in ipairs({ "leader", "ready", "rez", "summon", "phase", "role" }) do
         g[name] = holder:CreateTexture(nil, "OVERLAY")
         g[name]:Hide()
     end
     g.rez:SetAtlas(GroupIcons.REZ_ATLAS)
+    g.phase:SetAtlas(GroupIcons.PHASE_ATLAS)
     if frame.iconPoint then
         g.looter = holder:CreateTexture(nil, "OVERLAY")
         g.looter:SetTexture(GroupIcons.LOOTER_TEXTURE)
@@ -103,6 +112,8 @@ local function slots(frame)
     if want(frame, "groupLeader") then list[#list + 1] = g.leader end
     if want(frame, "groupReadyCheck") then list[#list + 1] = g.ready end
     if want(frame, "groupResurrect") then list[#list + 1] = g.rez end
+    if want(frame, "groupSummon") then list[#list + 1] = g.summon end
+    if want(frame, "groupPhase") then list[#list + 1] = g.phase end
     if want(frame, "groupRole") then list[#list + 1] = g.role end
     return list
 end
@@ -131,11 +142,13 @@ function GroupIcons.Refresh(frame)
     local g = frame.groupIcons
     if not g then return end
     local live = { leader = g.leaderKind, ready = g.readyStatus, rez = g.hasRez, looter = g.isLooter,
-        role = g.roleKind }
+        role = g.roleKind, summon = g.summonKind, phase = g.inOtherPhase }
     local data = g.preview or live
     local kind = want(frame, "groupLeader") and data.leader or nil
     local status = want(frame, "groupReadyCheck") and data.ready or nil
     local rez = want(frame, "groupResurrect") and data.rez == true
+    local summon = want(frame, "groupSummon") and GroupIcons.SUMMON[data.summon or ""] or nil
+    local phase = want(frame, "groupPhase") and data.phase == true
     local role = want(frame, "groupRole") and GroupIcons.ROLE_ATLAS[data.role or ""] or nil
     if kind then drawLeader(g.leader, kind) end
     if role then g.role:SetAtlas(role) end
@@ -144,10 +157,13 @@ function GroupIcons.Refresh(frame)
     g.leader:SetShown(kind ~= nil)
     g.ready:SetShown(status ~= nil)
     g.rez:SetShown(rez)
+    if summon then g.summon:SetAtlas(summon) end
+    g.summon:SetShown(summon ~= nil)
+    g.phase:SetShown(phase)
     if g.looter then g.looter:SetShown(data.looter == true and frame.iconPoint(frame, "looter") ~= nil) end
     if frame.iconPoint then return end
     local shown = {}
-    for _, icon in ipairs({ g.leader, g.ready, g.rez, g.role }) do
+    for _, icon in ipairs({ g.leader, g.ready, g.rez, g.summon, g.phase, g.role }) do
         if icon:IsShown() then shown[#shown + 1] = icon end
     end
     arrange(g, shown)
@@ -233,6 +249,24 @@ local function readyStatus(unit)
     return nil
 end
 
+-- "pending", "accepted", "declined" or nil.
+local function summonKind(unit)
+    if not (C_IncomingSummon and Enum.SummonStatus) then return nil end
+    local status = Secrets.Plain(Secrets.Call(C_IncomingSummon.IncomingSummonStatus, unit), "number")
+    local kinds = Enum.SummonStatus
+    if status == kinds.Pending then return "pending" end
+    if status == kinds.Accepted then return "accepted" end
+    if status == kinds.Declined then return "declined" end
+    return nil
+end
+
+-- Any phase reason counts; a member far away shows none, as Blizzard's.
+local function inOtherPhase(unit)
+    if Secrets.Call(UnitPhaseReason, unit) == nil then return false end
+    local distance = Secrets.Number(Secrets.Call(UnitDistanceSquared, unit))
+    return not distance or distance < GroupIcons.PHASE_DISTANCE_SQUARED
+end
+
 function GroupIcons.Update(frame)
     local g = frame.groupIcons
     if not g or g.preview then return end
@@ -247,6 +281,8 @@ function GroupIcons.Update(frame)
     g.hasRez = Secrets.Bool(UnitHasIncomingResurrection, unit) == true
     if g.looter then g.isLooter = isLooter(unit) end
     g.roleKind = GroupIcons.UnitRole(unit)
+    g.summonKind = summonKind(unit)
+    g.inOtherPhase = inOtherPhase(unit)
     GroupIcons.Refresh(frame)
 end
 

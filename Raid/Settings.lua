@@ -313,6 +313,8 @@ for _, icon in ipairs({
     { key = "leaderIcon", code = "LI", pointCode = "LP", point = "TOPLEFT" },
     { key = "looterIcon", code = "MI", pointCode = "MP", point = "TOPRIGHT" },
     { key = "readyCheckIcon", code = "YI", pointCode = "YP", point = "CENTER" },
+    { key = "summonIcon", code = "U8", pointCode = "U9", point = "CENTER" },
+    { key = "phaseIcon", code = "V8", pointCode = "V9", point = "BOTTOM" },
 }) do
     RaidSettings.Define({ key = icon.key, code = icon.code, scope = "frame", class = "behaviour", type = "bool", default = true })
     RaidSettings.Define({ key = icon.key .. "Point", code = icon.pointCode, scope = "frame", class = "layout", type = "enum",
@@ -330,6 +332,7 @@ RaidSettings.Define({ key = "rangeAlpha", code = "RA", scope = "frame", class = 
     default = 40 })
 RaidSettings.Define({ key = "aggroBorder", code = "AB", scope = "frame", class = "behaviour", type = "bool", default = true })
 RaidSettings.Define({ key = "targetBorder", code = "TB", scope = "frame", class = "behaviour", type = "bool", default = true })
+RaidSettings.Define({ key = "hoverHighlight", code = "W8", scope = "frame", class = "behaviour", type = "bool", default = false })
 
 -- A name list (Raid/Lists.lua): player names separated by commas, each
 -- once; never a digit or a sign no name holds. A name may hold an
