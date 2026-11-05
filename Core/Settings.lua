@@ -342,6 +342,9 @@ Settings.Define({ key = "castbarLatencyPoint", code = "CW", scope = "frame", onl
     values = { "END", "LEFT", "RIGHT" }, default = "END" })
 Settings.Define({ key = "castbarLatencyX", code = "CZ", scope = "frame", only = CASTBAR_LATENCY, type = "int", min = -200, max = 200,
     default = 0 })
+-- A strip on the bar while your interrupt is ready and the cast can be
+-- interrupted (Elements/Castbar.lua).
+Settings.Define({ key = "castbarInterrupt", code = "CQ", scope = "frame", only = { target = true, focus = true }, type = "bool", default = true })
 -- Keeps an empty bar in place while nothing is cast, so what is anchored
 -- below it does not jump.
 Settings.Define({ key = "castbarAlwaysShow", code = "CA", scope = "frame", only = CASTBAR, type = "bool", default = false })

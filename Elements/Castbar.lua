@@ -18,11 +18,25 @@ local Castbar = {
         "UNIT_SPELLCAST_START", "UNIT_SPELLCAST_STOP", "UNIT_SPELLCAST_FAILED",
         "UNIT_SPELLCAST_INTERRUPTED", "UNIT_SPELLCAST_DELAYED",
         "UNIT_SPELLCAST_CHANNEL_START", "UNIT_SPELLCAST_CHANNEL_UPDATE", "UNIT_SPELLCAST_CHANNEL_STOP",
+        "UNIT_SPELLCAST_INTERRUPTIBLE", "UNIT_SPELLCAST_NOT_INTERRUPTIBLE",
     },
 }
 ns.Castbar = Castbar
 
 local Config, Secrets, Settings = ns.Config, ns.Secrets, ns.Settings
+
+-- The player's interrupts, per class: every rank of each spell, lowest first.
+-- Classic IDs, as Range.CLASS_SPELLS; the spell book decides which rank counts.
+Castbar.INTERRUPTS = {
+    WARRIOR = { { 6552, 6554 }, { 72, 1671, 1672 } },        -- Pummel, Shield Bash
+    ROGUE = { { 1766, 1767, 1768, 1769 } },                  -- Kick
+    MAGE = { { 2139 } },                                     -- Counterspell
+    PRIEST = { { 15487 } },                                  -- Silence
+    SHAMAN = { { 8042, 8044, 8045, 8046, 10412, 10413, 10414 } }, -- Earth Shock
+}
+Castbar.INTERRUPT_COLOR = { 0.2, 1, 0.3, 1 }
+-- Height of the strip along the bar's bottom edge.
+Castbar.INTERRUPT_HEIGHT = 2
 
 Castbar.CAST_COLOR = { 1.0, 0.7, 0.0 }
 Castbar.CHANNEL_COLOR = { 0.3, 0.8, 0.3 }
@@ -124,8 +138,49 @@ local function paintLatency(bar)
     lag:Show()
 end
 
+-- isActive and isOnGCD are documented NeverSecret, IsSpellUsable without secret
+-- returns. Usable also covers stance and rage. The global cooldown alone does
+-- not count as a wait: it is over before an interrupt could be pressed anyway.
+local function spellReady(id)
+    if Secrets.Call(C_Spell.IsSpellUsable, id) ~= true then return false end
+    local cooldown = Secrets.Call(C_Spell.GetSpellCooldown, id)
+    return type(cooldown) == "table" and (not cooldown.isActive or cooldown.isOnGCD == true)
+end
+
+local function interruptReady()
+    local _, class = UnitClass("player")
+    for _, ranks in ipairs(Castbar.INTERRUPTS[Secrets.Plain(class, "string") or ""] or {}) do
+        for i = #ranks, 1, -1 do
+            if ns.RaidSpellbook.InBook(ranks[i]) then
+                if spellReady(ranks[i]) then return true end
+                break
+            end
+        end
+    end
+    return false
+end
+
+local function interruptOn(scope)
+    return Settings.AppliesTo(Settings.Get("castbarInterrupt"), scope) and Config.Get(scope, "castbarInterrupt")
+end
+
+-- The strip: your interrupt is ready and this cast can be interrupted. A cast's
+-- notInterruptible may be secret, so the client sets the opacity from it.
+local function paintInterrupt(bar)
+    local marker, cast = bar.interrupt, bar.cast
+    local on = interruptOn(bar.scope) and (bar.preview or (cast and interruptReady()))
+    marker:SetShown(on or false)
+    if not on then return end
+    if not cast or type(cast.notInterruptible) == "nil" then
+        marker:SetAlpha(1)
+    else
+        marker:SetAlphaFromBoolean(cast.notInterruptible, 0, 1)
+    end
+end
+
 local function paint(bar)
     paintLatency(bar)
+    paintInterrupt(bar)
     local bg = Config.Get(bar.scope, "backgroundColor")
     bar.bg:SetVertexColor(bg[1], bg[2], bg[3], bg[4])
     bar.iconBg:SetColorTexture(bg[1], bg[2], bg[3], bg[4])
@@ -209,7 +264,9 @@ function Castbar.Begin(bar, unit, channel, castGUID)
     if type(info[1]) == "nil" then return false end
     stopTimer(bar)
     bar.cast = { startMs = info[4], endMs = info[5], channel = channel, guid = castGUID,
-        duration = durationOf(unit, channel) }
+        duration = durationOf(unit, channel),
+        -- A channel has no castID, so the flag comes one earlier.
+        notInterruptible = info[channel and 7 or 8] }
     bar:SetMinMaxValues(info[4], info[5])
     bar:SetReverseFill(channel)
     paint(bar)
@@ -244,6 +301,7 @@ function Castbar.OnUpdate(bar)
     if not cast or bar.preview then return end
     local nowMs = now()
     if not bar.timing then bar:SetValue(nowMs) end
+    paintInterrupt(bar)
     local endMs = Secrets.Number(cast.endMs)
     if endMs and nowMs >= endMs then
         -- The stop event went missing; a readable end time is proof enough.
@@ -266,6 +324,12 @@ function Castbar.Build(frame)
     local lagColor = Castbar.LATENCY_COLOR
     bar.lag:SetColorTexture(lagColor[1], lagColor[2], lagColor[3], lagColor[4])
     bar.lag:Hide()
+    bar.interrupt = bar:CreateTexture(nil, "ARTWORK", nil, 2)
+    local ready = Castbar.INTERRUPT_COLOR
+    bar.interrupt:SetColorTexture(ready[1], ready[2], ready[3], ready[4])
+    bar.interrupt:SetPoint("BOTTOMLEFT", bar, "BOTTOMLEFT", 0, 0)
+    bar.interrupt:SetPoint("BOTTOMRIGHT", bar, "BOTTOMRIGHT", 0, 0)
+    bar.interrupt:Hide()
     -- Fills the icon slot while no spell icon is shown.
     bar.iconBg = bar:CreateTexture(nil, "BACKGROUND")
     bar.icon = bar:CreateTexture(nil, "ARTWORK")
@@ -274,7 +338,9 @@ function Castbar.Build(frame)
     -- The castbar's whole rectangle, icon included: a detached castbar's
     -- corners are rounded and its border goes around it.
     bar.box = CreateFrame("Frame", nil, bar)
-    for _, texture in ipairs({ bar.bg, bar.remain, bar.lag, bar.iconBg, bar.icon }) do ns.Corners.Add(bar, texture) end
+    for _, texture in ipairs({ bar.bg, bar.remain, bar.lag, bar.interrupt, bar.iconBg, bar.icon }) do
+        ns.Corners.Add(bar, texture)
+    end
     ns.Corners.Add(bar, function() return bar:GetStatusBarTexture() end)
     bar.clip = ns.Corners.Clipper(bar)
     bar:SetScript("OnUpdate", Castbar.OnUpdate)
@@ -390,6 +456,7 @@ function Castbar.Style(frame)
     bar:SetStatusBarTexture(tex)
     bar.bg:SetTexture(tex)
     bar.remain:SetTexture(tex)
+    bar.interrupt:SetHeight(ns.Pixel.Snap(Castbar.INTERRUPT_HEIGHT))
     paint(bar)
     bar.icon:ClearAllPoints()
     bar.icon:SetPoint("TOPRIGHT", bar, "TOPLEFT", 0, 0)

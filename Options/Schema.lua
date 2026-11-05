@@ -182,7 +182,7 @@ Schema.FRAME = {
     { id = "castbar", sections = {
         { id = "castbar", keys = { "castbarEnabled", "castbarAlwaysShow", "hideBlizzardCastbar", "castbarPosition", "castbarDock",
             "castbarHeight" } },
-        { id = "castbarContent", keys = { "castbarIcon", "castbarName", "castbarTime", "castbarLatency", "castbarLatencyPoint",
+        { id = "castbarContent", keys = { "castbarIcon", "castbarName", "castbarTime", "castbarInterrupt", "castbarLatency", "castbarLatencyPoint",
             "castbarLatencyX" } },
         { id = "castbarDetached", keys = { "castbarX", "castbarY" } },
         { id = "threatBar", keys = { "threatBar", "threatBarHeight", "threatBarWarn", "threatBarRole",

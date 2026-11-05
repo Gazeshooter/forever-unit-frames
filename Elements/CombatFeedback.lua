@@ -3,10 +3,10 @@ local _, ns = ...
 -- Damage and heal numbers inside the frame, like Blizzard's hit indicator
 -- on the player and pet frames (CombatFeedback.lua): damage red, heals
 -- green, misses and the like as a word, with Blizzard's size steps and
--- timings. The amount may be secret: it goes to the font string untouched
--- (SetFormattedText) and is never measured or compared; readable amounts
--- are abbreviated like the health texts. The fade is an animation group
--- on a holder frame, so no Lua counts time.
+-- timings. UNIT_COMBAT's amount is secret: it is never measured or compared,
+-- only the client's own formatters turn it into text. Readable amounts are
+-- abbreviated like the health texts. The fade is an animation group on a
+-- holder frame, so no Lua counts time.
 local CombatFeedback = { name = "CombatFeedback", unitEvents = { "UNIT_COMBAT" } }
 ns.CombatFeedback = CombatFeedback
 
@@ -25,7 +25,8 @@ local WORDS = {
     IMMUNE = true, BLOCK = true, DODGE = true, PARRY = true, MISS = true, RESIST = true,
     EVADE = true, DEFLECT = true, ABSORB = true, REFLECT = true, INTERRUPT = true,
 }
--- A WOUND of readable zero: the flag says what happened, else a miss.
+-- A WOUND with one of these flags names it. A readable zero without one is
+-- a miss.
 local ZERO_WOUND = { ABSORB = true, BLOCK = true, RESIST = true }
 local CRITICAL = { CRITICAL = true, CRUSHING = true }
 
@@ -33,6 +34,13 @@ local CRITICAL = { CRITICAL = true, CRUSHING = true }
 local function plain(v)
     if Secrets.IsSecret(v) or type(v) ~= "string" then return nil end
     return v
+end
+
+-- shortcut: a secret zero without a flag shows "0" instead of a miss, as no
+-- formatter tells it apart and still abbreviates; fine while such hits stay rare.
+local function amountText(amount)
+    if Secrets.IsSecret(amount) then return AbbreviateLargeNumbers(amount) end
+    return Secrets.Abbreviate(amount)
 end
 
 local function alphaStep(group, from, to, duration, order)
@@ -145,10 +153,18 @@ function CombatFeedback.Update(frame, event, unit, action, flags, amount)
     if kind == "WOUND" and Secrets.Number(amount) == 0 then
         kind = ZERO_WOUND[flag] and flag or "MISS"
     end
-    if kind == "WOUND" or kind == "HEAL" then
+    if kind == "WOUND" and ZERO_WOUND[flag] then
+        -- The word, then what got through: nothing for a secret zero, which
+        -- this code cannot tell from a partly absorbed hit.
+        setFont(frame, size)
+        text:SetFormattedText("%s %s", L["FEEDBACK_" .. flag], C_StringUtil.TruncateWhenZero(amount))
+        paint(text, CombatFeedback.WORD)
+    elseif kind == "WOUND" or kind == "HEAL" then
         if CRITICAL[flag] then size = math.floor(size * 1.5 + 0.5) end
         setFont(frame, size)
-        text:SetFormattedText("%s", Secrets.Abbreviate(amount))
+        -- A partial block: the client's own "12 (blocked)", as Blizzard's frames.
+        local format = flag == "BLOCK_REDUCED" and COMBAT_TEXT_BLOCK_REDUCED or "%s"
+        text:SetFormattedText(format, amountText(amount))
         paint(text, kind == "WOUND" and CombatFeedback.DAMAGE or CombatFeedback.HEAL)
     elseif WORDS[kind] then
         setFont(frame, size)

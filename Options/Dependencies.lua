@@ -179,7 +179,7 @@ local RULES = {
     { on("buffsCasterBorder"), { "buffsOwnBorderColor", "buffsOtherBorderColor" } },
     -- Hiding Blizzard's castbar does not depend on ours.
     { on("castbarEnabled"), { "castbarAlwaysShow", "castbarPosition", "castbarDock", "castbarHeight", "castbarIcon",
-        "castbarName", "castbarTime", "castbarLatency", "castbarLatencyPoint", "castbarLatencyX", "castbarX", "castbarY" } },
+        "castbarName", "castbarTime", "castbarInterrupt", "castbarLatency", "castbarLatencyPoint", "castbarLatencyX", "castbarX", "castbarY" } },
     { on("castbarLatency"), { "castbarLatencyPoint", "castbarLatencyX" } },
     { is("castbarPosition", "DETACHED"), { "castbarX", "castbarY" } },
     { on("threatBar"), { "threatBarHeight", "threatBarWarn", "threatBarRole", "threatBarSolo" } },

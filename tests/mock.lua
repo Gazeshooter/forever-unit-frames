@@ -2367,6 +2367,15 @@ function M.Reset()
     end
     M.KnownTop = knownTop
     _G.C_SpellBook = { IsSpellKnown = function(id) return knownTop(id) end }
+    -- SpellDocumentation.lua: usable unless M.spellUnusable[id]; no cooldown
+    -- unless M.spellCooldowns[id] (isActive, isOnGCD: NeverSecret). Nil for a
+    -- spell the client does not know (MayReturnNothing).
+    M.spellUnusable, M.spellCooldowns = {}, {}
+    C_Spell.IsSpellUsable = function(id) return M.spells[id] ~= nil and not M.spellUnusable[id], false end
+    C_Spell.GetSpellCooldown = function(id)
+        if not M.spells[id] then return nil end
+        return M.spellCooldowns[id] or { isActive = false, isOnGCD = false }
+    end
     -- The spell book (SpellBookDocumentation.lua): skill line 1, General,
     -- holds the learned spells marked general (racials:
     -- M.spells[id].general), line 2, the class's, the other learned spells
@@ -2508,6 +2517,7 @@ function M.Reset()
         if M.IsSecret(n) then return M.Secret(text) end
         return text
     end
+    _G.AbbreviateLargeNumbers = _G.AbbreviateNumbers
     _G.UnitGetIncomingHeals = function(unit, healer)
         local d = u(unit)
         if not d then return nil end

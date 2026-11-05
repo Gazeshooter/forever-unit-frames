@@ -43,13 +43,14 @@ C.Set("player", "fontShadow", false)
 CF.Update(f, "UNIT_COMBAT", "pet", "HEAL", "", 300, 2)
 H.check("other unit: nothing", holder:IsShown(), false)
 
--- A secret hit: passed through untouched, red.
+-- A secret hit: abbreviated by the client, red.
 local hit = M.Secret(532)
 M.FireEvent("UNIT_COMBAT", "player", "WOUND", "", hit, 1)
 H.checkTrue("shown", holder:IsShown())
 H.checkTrue("fading", fade:IsPlaying())
 H.check("format", text._fmt, "%s")
-H.check("amount is the secret", text._args[1], hit)
+H.checkTrue("amount stays secret", M.IsSecret(text._args[1]))
+H.check("amount by the client's abbreviation", M.Reveal(text._args[1]), "532~")
 H.check("red", text._color[1] .. "," .. text._color[2], "1,0.25")
 M.FinishAnimations()
 H.check("gone after the fade", holder:IsShown(), false)
@@ -57,14 +58,40 @@ H.check("gone after the fade", holder:IsShown(), false)
 -- A secret critical hit: bigger, still untouched.
 M.FireEvent("UNIT_COMBAT", "player", "WOUND", "CRITICAL", hit, 1)
 H.check("secret critical: bigger", text._font[2], 27)
-H.check("secret critical: amount", text._args[1], hit)
+H.check("secret critical: amount", M.Reveal(text._args[1]), "532~")
 -- Secret flags: a plain hit.
 M.FireEvent("UNIT_COMBAT", "player", "WOUND", M.Secret("CRITICAL"), 40, 1)
 H.check("secret flags: normal size", text._font[2], 18)
 H.check("secret flags: amount", text._args[1], "40")
--- A secret amount with a zero-hit flag cannot be told from a hit.
-M.FireEvent("UNIT_COMBAT", "player", "WOUND", "ABSORB", hit, 1)
-H.check("secret amount: a number", text._args[1], hit)
+-- A flagged hit names its flag: alone when nothing got through, else with
+-- the rest. A secret amount cannot be measured, so the client decides.
+for flag, word in pairs({ ABSORB = L.FEEDBACK_ABSORB, BLOCK = L.FEEDBACK_BLOCK, RESIST = L.FEEDBACK_RESIST }) do
+    M.FireEvent("UNIT_COMBAT", "player", "WOUND", flag, M.Secret(0), 1)
+    H.check(flag .. " secret zero: format", text._fmt, "%s %s")
+    H.check(flag .. " secret zero: word", text._args[1], word)
+    H.check(flag .. " secret zero: no number", M.Reveal(text._args[2]), "")
+    H.check(flag .. " secret zero: white", text._color[2], 1)
+    M.FireEvent("UNIT_COMBAT", "player", "WOUND", flag, hit, 1)
+    H.check(flag .. " secret rest: word", text._args[1], word)
+    H.check(flag .. " secret rest: number", M.Reveal(text._args[2]), "532")
+    H.checkTrue(flag .. " secret rest: stays secret", M.IsSecret(text._args[2]))
+    M.FireEvent("UNIT_COMBAT", "player", "WOUND", flag, 532, 1)
+    H.check(flag .. " readable rest: word and number", text._args[1] .. " " .. text._args[2], word .. " 532")
+end
+-- A partial block: the client's format around the rest, still damage.
+_G.COMBAT_TEXT_BLOCK_REDUCED = "%s (blocked)"
+M.FireEvent("UNIT_COMBAT", "player", "WOUND", "BLOCK_REDUCED", hit, 1)
+H.check("partial block: format", text._fmt, "%s (blocked)")
+H.checkTrue("partial block: amount stays secret", M.IsSecret(text._args[1]))
+H.check("partial block: amount", M.Reveal(text._args[1]), "532~")
+H.check("partial block: red", text._color[1] .. "," .. text._color[2], "1,0.25")
+_G.COMBAT_TEXT_BLOCK_REDUCED = nil
+M.FireEvent("UNIT_COMBAT", "player", "WOUND", "BLOCK_REDUCED", hit, 1)
+H.check("partial block without the client's text: just the number", text._fmt, "%s")
+-- A secret heal: abbreviated by the client too.
+M.FireEvent("UNIT_COMBAT", "player", "HEAL", "", M.Secret(12345), 2)
+H.check("secret heal", M.Reveal(text._args[1]), "12345~")
+H.check("secret heal: green", text._color[2], 1)
 
 -- A readable heal: abbreviated, green; a critical one bigger.
 M.FireEvent("UNIT_COMBAT", "player", "HEAL", "CRITICAL", 12345, 2)
