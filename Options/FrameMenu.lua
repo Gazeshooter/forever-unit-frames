@@ -1,9 +1,9 @@
 local _, ns = ...
 
 -- "Edit Frame" in Blizzard's unit menu, opened by a right click on one of
--- our frames (togglemenu): opens our options on that frame's page. It is
--- appended, so it ends Blizzard's last section, "Other Options"
--- (UnitPopupMenus.lua), without a title of its own. Added
+-- our frames (togglemenu): opens our options on that frame's page. It ends
+-- Blizzard's last section, "Other Options" (UnitPopupMenus.lua), without a
+-- title of its own, above the entries for leaving the group if any. Added
 -- through Menu.ModifyMenu like the raid cells' entries (Raid/Menu.lua,
 -- which adds it for the cells itself); it only opens our own window, so
 -- Blizzard's entries stay untainted. Test mode's frames show the player,
@@ -33,8 +33,35 @@ function FrameMenu.Edit(frame)
     end
 end
 
+-- Where a unit's identity is secret (in dungeons), Blizzard's menu title is a
+-- secret name and its layout calculates with the title's size. Anything an
+-- addon adds taints the menu, the calculation then fails, and the menu stays
+-- unsized with its entries on top of each other. So nothing is added there.
+function FrameMenu.CanAdd(contextData)
+    local unit = contextData and contextData.unit
+    local identitySecret = C_Secrets and C_Secrets.ShouldUnitIdentityBeSecret
+    return not (unit and identitySecret) or ns.Secrets.Bool(identitySecret, unit) == false
+end
+
+-- Blizzard's entries for leaving, in their order (UnitPopupMenuSelf): only your
+-- own menu has them.
+local function firstLeaveIndex(root)
+    local leave = { [PARTY_LEAVE or ""] = true, [INSTANCE_PARTY_LEAVE or ""] = true,
+        [INSTANCE_WALK_IN_LEAVE or ""] = true, [VOTE_TO_ABANDON or ""] = true }
+    for index, element in root:EnumerateElementDescriptions() do
+        if leave[MenuUtil.GetElementText(element) or ""] then return index end
+    end
+end
+
+-- Above leaving the group, so nobody leaves by reaching for the entry at the end.
 function FrameMenu.AddEdit(root, frame)
-    root:CreateButton(L.MENU_EDIT_FRAME, function() FrameMenu.Edit(frame) end)
+    local function edit() FrameMenu.Edit(frame) end
+    local index = firstLeaveIndex(root)
+    if index then
+        root:Insert(MenuUtil.CreateButton(L.MENU_EDIT_FRAME, edit), index)
+    else
+        root:CreateButton(L.MENU_EDIT_FRAME, edit)
+    end
 end
 
 local function ours(frame)
@@ -48,7 +75,7 @@ end
 
 function FrameMenu.Modify(_, root, contextData)
     local frame = contextData and contextData.ownerFrame
-    if ours(frame) then FrameMenu.AddEdit(root, frame) end
+    if ours(frame) and FrameMenu.CanAdd(contextData) then FrameMenu.AddEdit(root, frame) end
 end
 
 if Menu and Menu.ModifyMenu then

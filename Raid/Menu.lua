@@ -46,7 +46,7 @@ end
 -- entries under our title.
 function RaidMenu.Modify(_, root, contextData)
     local cell = contextData and contextData.ownerFrame
-    if not (type(cell) == "table" and Cell.Is(cell)) then return end
+    if not (type(cell) == "table" and Cell.Is(cell)) or not ns.FrameMenu.CanAdd(contextData) then return end
     ns.FrameMenu.AddEdit(root, cell)
     local name = ours(cell) and Lists.UnitName(contextData.unit)
     if not name then return end

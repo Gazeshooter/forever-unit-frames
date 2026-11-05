@@ -2962,6 +2962,10 @@ function M.Reset()
             M.menu = root
             return root
         end,
+        CreateButton = function(text, callback, data)
+            return { kind = "button", text = text, callback = callback, data = data }
+        end,
+        GetElementText = function(element) return element.text end,
     }
     -- C_AddOns.IsAddOnLoaded(name) -> loadedOrLoading, loaded
     -- (AddOnsDocumentation.lua): the addons in M.loadedAddons (name ->
@@ -3192,6 +3196,11 @@ local function menuDescription(tag, contextData)
             table.insert(self.elements, e)
             return e
         end,
+        EnumerateElementDescriptions = function(self) return ipairs(self.elements) end,
+        Insert = function(self, element, index)
+            table.insert(self.elements, index, element)
+            return element
+        end,
     }
     return setmetatable(root, { __index = function(_, k)
         return methods[k] or error("mock: menu description has no " .. tostring(k), 2)
@@ -3201,13 +3210,16 @@ end
 M.NewMenuDescription = menuDescription
 
 -- UnitPopup_OpenMenu (Blizzard_UnitPopupShared/UnitPopupShared.lua): the
--- unit menu "which", tagged MENU_UNIT_<which>; the mock holds none of
--- Blizzard's own entries, only what Menu.ModifyMenu callbacks add. An
--- addon's callback is the addon's own (insecure) code, also when the menu
--- was opened from a secure click.
+-- unit menu "which", tagged MENU_UNIT_<which>; of Blizzard's own entries the
+-- mock holds only the texts a test puts in M.unitMenuEntries[which], plus what
+-- Menu.ModifyMenu callbacks add. An addon's callback is the addon's own
+-- (insecure) code, also when the menu was opened from a secure click.
 function M.OpenUnitMenu(which, contextData)
     local tag = "MENU_UNIT_" .. which
     local root = menuDescription(tag, contextData)
+    for _, text in ipairs(M.unitMenuEntries and M.unitMenuEntries[which] or {}) do
+        root:CreateButton(text)
+    end
     local depth = M.secureDepth
     M.secureDepth = 0
     for _, callback in ipairs(M.menuMods[tag] or {}) do
