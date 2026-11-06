@@ -97,6 +97,9 @@ News.ENTRIES = {
     ["0.35.0"] = {
         lines = { "NEWS_0_35_0_SEARCH", "NEWS_0_35_0_KEYS", "NEWS_0_35_0_SOLO" },
     },
+    ["0.36.0"] = {
+        lines = { "NEWS_0_36_0_SORT" },
+    },
 }
 
 -- The version this client loaded (## Version in the TOC).

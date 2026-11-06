@@ -2,7 +2,7 @@
 
 # Settings: Group
 
-The party only: how the members are arranged, their pets and their targets. Its Buffs section at the end holds the raid window's smart buff key, Also when solo and the buff window's switch: the same values, in effect while the raid frames are on.
+The party only: how the members are arranged (also sorted by role), their pets and their targets. Its Buffs section at the end holds the raid window's smart buff key, Also when solo and the buff window's switch: the same values, in effect while the raid frames are on.
 
 The **Group** tab on each frame's page in `/fuf`. The last column says which frames have the option; a default that differs per frame is listed per frame.
 
@@ -17,6 +17,7 @@ Click-casting on the party: Layout tab (or General > Frames); the bindings are i
 <tbody>
 <tr><td><b>Orientation</b></td><td></td><td>Vertical, Horizontal</td><td>Vertical</td><td>Party</td></tr>
 <tr><td><b>Grow upward</b></td><td>From the bottom up; from right to left when horizontal</td><td>On, Off</td><td>Off</td><td>Party</td></tr>
+<tr><td><b>Sort by role</b></td><td>Tanks, healers, damage, then no role. A pet list keeps the group's order; pets beside their member follow</td><td>On, Off</td><td>Off</td><td>Party</td></tr>
 <tr><td><b>Spacing</b></td><td></td><td>0 – 60</td><td>27</td><td>Party</td></tr>
 <tr><td><b>Show yourself</b></td><td></td><td>On, Off</td><td>Off</td><td>Party</td></tr>
 <tr><td><b>Show when solo</b></td><td>Shows your own frame outside a group</td><td>On, Off</td><td>Off</td><td>Party</td></tr>

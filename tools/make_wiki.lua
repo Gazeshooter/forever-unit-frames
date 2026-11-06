@@ -126,7 +126,7 @@ end
 -- What each frame tab is for (the page's first line).
 local TAB_INTRO = {
     layout = "Size, position, the rows of the frame, portrait, border and corners, shadow.",
-    group = "The party only: how the members are arranged, their pets and their targets. Its Buffs section at the end holds the raid window's smart buff key, Also when solo and the buff window's switch: the same values, in effect while the raid frames are on.",
+    group = "The party only: how the members are arranged (also sorted by role), their pets and their targets. Its Buffs section at the end holds the raid window's smart buff key, Also when solo and the buff window's switch: the same values, in effect while the raid frames are on.",
     bars = "Colors and textures of the bars, shields, incoming heals, power colors and the druid's mana.",
     text = "What the texts on the title row and the bars show, the damage and heal numbers, how the texts read,"
         .. " and the font.",

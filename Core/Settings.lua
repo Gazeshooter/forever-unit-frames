@@ -245,6 +245,9 @@ Settings.Define({ key = "partyOrientation", code = "OR", scope = "frame", only =
 -- Grow the other way: up from the block's bottom edge (left from its
 -- right edge when horizontal). Member 1 then sits at that edge.
 Settings.Define({ key = "partyGrowReverse", code = "GR", scope = "frame", only = PARTY, type = "bool", default = false })
+-- Tanks, healers, damage, no role: the party header's own grouping. The
+-- pet list keeps the group's order (its header cannot group by this role).
+Settings.Define({ key = "partySortRole", code = "SR", scope = "frame", only = PARTY, type = "bool", default = false })
 Settings.Define({ key = "partySpacing", code = "GS", scope = "frame", only = PARTY, type = "int", min = 0, max = 60, default = 12 })
 Settings.Define({ key = "partyShowPlayer", code = "SP", scope = "frame", only = PARTY, type = "bool", default = false })
 Settings.Define({ key = "partyShowSolo", code = "SO", scope = "frame", only = PARTY, type = "bool", default = false })

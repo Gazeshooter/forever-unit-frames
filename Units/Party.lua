@@ -139,6 +139,8 @@ local function headerAttributes()
     if horizontal then point = reverse and "RIGHT" or "LEFT" else point = reverse and "BOTTOM" or "TOP" end
     return {
         template = Party.TEMPLATE, templateType = "Button", sortMethod = "INDEX",
+        -- false, not nil: SetAttributes goes through pairs, nil would keep the old value.
+        groupBy = get("partySortRole") and "ASSIGNEDROLE" or false, groupingOrder = ns.RaidLayout.ROLE_ORDER,
         showParty = true, showPlayer = get("partyShowPlayer"), showSolo = get("partyShowSolo"),
         point = point,
         xOffset = horizontal and (reverse and -spacing or spacing) or 0,
