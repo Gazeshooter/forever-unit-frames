@@ -367,7 +367,7 @@ local RAID_TAB_INTRO = {
         .. " (heals over time, shields).",
     clickCast = "Heal, decurse, target, assist or focus raid members with one click: up to 40 mouse combinations"
         .. " (five buttons, with and without Shift, Ctrl and Alt) on the cells of every panel and on the unit"
-        .. " frames (player, pet, target, target of target, focus, party; switched in the unit frames' options,"
+        .. " frames (player, pet, target, target of target, focus, party and its pets; switched in the unit frames' options,"
         .. " General > Frames, per frame on its Layout tab, also while the raid frames are off), and up to 16 keys."
         .. " For **Cast a spell** two dropdowns stand beside the kind: the spell, from your spell book's spells"
         .. " that can be cast on others (heals, dispels, buffs, resurrections; no passives, no self-only spells),"

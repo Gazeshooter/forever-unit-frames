@@ -111,7 +111,7 @@ Settings.Define({ key = "powerColorMode", code = "UT", scope = "inherit", type =
 Settings.Define({ key = "unitFrames", code = "UU", scope = "general", type = "bool", default = true })
 -- Click-casting on the unit frames (decision 76): the raid window's
 -- bindings (Raid/ClickCast.lua) on the player, pet, target, target of
--- target, focus and party member buttons. One switch on General, each
+-- target, focus, party member and party pet buttons. One switch on General, each
 -- frame may override it. With the default bindings nothing changes.
 Settings.Define({ key = "clickCast", code = "CK", scope = "inherit", type = "bool", default = true })
 

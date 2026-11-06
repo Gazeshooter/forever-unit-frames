@@ -2,7 +2,7 @@ local _, ns = ...
 
 -- Click-casting on the raid cells of every panel (while the raid frames
 -- are on) and on the unit frames whose clickCast is on (player, pet,
--- target, target of target, focus, party members; decision 76): the
+-- target, target of target, focus, party members and their pets; decision 76): the
 -- bindings of the raid profile's character-wide scope (Raid/Settings.lua: Raid.CLICK_SLOTS) written as
 -- the secure attributes the client reads on a click (SecureTemplates.lua:
 -- SecureButton_GetModifiedAttribute): "*type1" for the plain left click,
@@ -10,8 +10,7 @@ local _, ns = ...
 -- beside them. Static attributes only (no snippets on this client), and
 -- out of combat only: a cell a header makes in combat gets them after
 -- combat and does what the XML says until then (left target, right menu).
--- Test mode's pretend cells, party pets and party targets are never
--- touched.
+-- Test mode's pretend cells and party targets are never touched.
 local ClickCast = {}
 ns.ClickCast = ClickCast
 
@@ -242,15 +241,17 @@ function ClickCast.On()
 end
 
 -- The unit frames that may take them (decision 76), each by its own
--- clickCast (inherited from General). Party pets and targets never.
+-- clickCast (inherited from General). Party pets follow the party's;
+-- party targets never.
 ClickCast.UNIT_SCOPES = { player = true, pet = true, target = true, targettarget = true, focus = true, party = true }
 
 -- Whether a frame takes the bindings: a raid cell a header made while the
 -- raid frames are on, a unit frame whose switch is on.
 local function takes(frame)
     if ns.RaidCell.Is(frame) then return ns.RaidPanel.Enabled() end
-    return ClickCast.UNIT_SCOPES[frame.key] == true and ns.Config.Profile() ~= nil
-        and ns.Config.Get(frame.key, "clickCast") == true
+    local key = frame.key == ns.Party.PET_KEY and ns.Party.KEY or frame.key
+    return ClickCast.UNIT_SCOPES[key] == true and ns.Config.Profile() ~= nil
+        and ns.Config.Get(key, "clickCast") == true
 end
 
 -- The names a frame holds a value for in a plan, and their values.
@@ -307,14 +308,16 @@ local function apply(frame, values, defaults)
 end
 
 -- Every frame that may take bindings: the cells the headers made (never
--- test mode's), the single unit frames and the party members.
+-- test mode's), the single unit frames, the party members and their pets.
 local function frames()
     local list = {}
     for _, b in ipairs(ns.RaidCell.buttons) do list[#list + 1] = b end
     for key in pairs(ClickCast.UNIT_SCOPES) do
         if ns.Frames[key] then list[#list + 1] = ns.Frames[key] end
     end
-    for _, b in ipairs(ns.Party.buttons or {}) do list[#list + 1] = b end
+    for _, group in ipairs({ ns.Party.buttons or {}, ns.PartyPets.buttons, ns.PartyPets.beside }) do
+        for _, b in ipairs(group) do list[#list + 1] = b end
+    end
     return list
 end
 

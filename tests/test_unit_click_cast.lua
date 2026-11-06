@@ -91,10 +91,21 @@ H.check("after combat: off", frameOf("player"):GetAttribute("ctrl-type1"), nil)
 C.ClearOverride("player", "clickCast")
 M.RunTimers()
 
--- Party pets and targets: never (their own rules).
-for _, b in ipairs(ns.PartyPets and ns.PartyPets.buttons or {}) do
-    H.check("party pet untouched", b:GetAttribute("ctrl-type1"), nil)
-end
+-- Party pets follow the party's switch, listed or beside their owner;
+-- party targets never.
+ns.Config.Set("party", "partyShowPets", true)
+M.RunTimers()
+local partyPets = { frameOf("party").petButton }
+for _, b in ipairs(ns.PartyPets.buttons) do partyPets[#partyPets + 1] = b end
+H.checkTrue("party pets exist", #partyPets > 1)
+for _, b in ipairs(partyPets) do H.check("party pet: the binding", b:GetAttribute("ctrl-type1"), "assist") end
+H.check("party target untouched", frameOf("party").targetButton:GetAttribute("ctrl-type1"), nil)
+ns.Config.Set("party", "clickCast", false)
+M.RunTimers()
+for _, b in ipairs(partyPets) do H.check("party pet: party off", b:GetAttribute("ctrl-type1"), nil) end
+ns.Config.Set("party", "clickCast", true)
+M.RunTimers()
+for _, b in ipairs(partyPets) do H.check("party pet: party on", b:GetAttribute("ctrl-type1"), "assist") end
 -- Click-casting itself off: nothing anywhere.
 RC.Set("general", "clickCast", "OFF")
 M.RunTimers()

@@ -266,6 +266,8 @@ function Pets.InitButton(button)
     Single.StyleContent(button)
     -- Made out of combat (ahead of time): its aura containers now.
     ns.Units.Prepare(button)
+    -- Click-casting (Raid/ClickCast.lua), now or after combat.
+    ns.ClickCast.Added(button)
 end
 
 -- The header assigns or clears a unit, in or out of combat.
@@ -300,6 +302,7 @@ function Pets.InitBeside(button)
     Single.StyleContent(button)
     -- Made with its member, ahead of time: its aura containers now.
     ns.Units.Prepare(button)
+    ns.ClickCast.Added(button)
     if InCombatLockdown() then ns.AfterCombat("partyStyle", Party.StyleAll) end
 end
 
