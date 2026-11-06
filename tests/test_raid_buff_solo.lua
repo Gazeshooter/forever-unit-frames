@@ -49,3 +49,17 @@ RC.Set("general", "buffSolo", false)
 M.Tick(1)
 H.check("off again: the key is free", GetBindingAction("SHIFT-B", true), "")
 H.check("off again: no state", #Watch.state.entries, 0)
+
+-- The key's binding has priority: Bartender4 sets a plain override on the
+-- same key at every UPDATE_BINDINGS, and between equals either could win.
+RC.Set("general", "buffSolo", true)
+M.Tick(1)
+local setBinding, priority = SetOverrideBindingClick, nil
+_G.SetOverrideBindingClick = function(owner, isPriority, ...)
+    priority = isPriority
+    return setBinding(owner, isPriority, ...)
+end
+RC.Set("general", "buffKey", "F9")
+M.Tick(1)
+_G.SetOverrideBindingClick = setBinding
+H.check("the key is bound with priority", priority, true)

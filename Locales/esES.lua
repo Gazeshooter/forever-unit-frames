@@ -1421,4 +1421,6 @@ L.NEWS_0_35_0_SEARCH = "Las dos ventanas de opciones tienen un cuadro de búsque
 L.NEWS_0_35_0_KEYS = "Las teclas ahora se asignan pulsándolas: haz clic en el botón y pulsa la combinación. Vale para la tecla de beneficios y las teclas de clic."
 L.NEWS_0_35_0_SOLO = "La tecla de beneficios y su ventana también pueden funcionar en solitario, y sus ajustes están también en la pestaña Grupo del grupo."
 L.NEWS_0_36_0_SORT = "Los marcos de grupo pueden ordenarse por rol: Grupo > Grupo > Ordenar por rol."
+L.NEWS_0_36_1_KEY = "La tecla de beneficios solo se asigna cuando hay algo que lanzar y entonces se impone a Bartender; si no, la tecla hace lo de antes."
+L.NEWS_0_36_1_STRONGER = "Un miembro con un beneficio más fuerte ya no bloquea la tecla: se omite durante dos minutos."
 L.NEWS_OPEN_SHIELDS = "Abrir el vigía de escudos"

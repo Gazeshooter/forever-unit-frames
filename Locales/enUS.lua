@@ -1448,4 +1448,6 @@ L.NEWS_0_35_0_SEARCH = "Both options windows have a search box in the title bar:
 L.NEWS_0_35_0_KEYS = "Keys are now set by pressing them: click the button and press the combination. This goes for the smart buff key and the click-casting keys."
 L.NEWS_0_35_0_SOLO = "The smart buff key and the buff window can also work when you play alone (Also when solo), and the party's Group tab holds their settings too."
 L.NEWS_0_36_0_SORT = "The party frames can sort by role: Party > Group > Sort by role."
+L.NEWS_0_36_1_KEY = "The smart buff key takes its key only while there is something to cast and wins over Bartender then; otherwise the key does what it did before."
+L.NEWS_0_36_1_STRONGER = "A member with a stronger buff no longer blocks the smart buff: they are passed over for two minutes."
 L.NEWS_OPEN_SHIELDS = "Open the shield watch"

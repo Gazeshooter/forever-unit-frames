@@ -1420,4 +1420,6 @@ L.NEWS_0_35_0_SEARCH = "Beide Optionsfenster haben ein Suchfeld in der Titelleis
 L.NEWS_0_35_0_KEYS = "Tasten werden jetzt durch Drücken belegt: Knopf anklicken und die Kombination drücken. Das gilt für die Buff-Taste und die Click-Casting-Tasten."
 L.NEWS_0_35_0_SOLO = "Buff-Taste und Buff-Übersicht können auch beim Alleinspielen laufen (Auch alleine), und ihre Einstellungen stehen auch im Reiter Gruppe der Party."
 L.NEWS_0_36_0_SORT = "Die Party-Frames können nach Rolle sortieren: Party > Gruppe > Nach Rolle sortieren."
+L.NEWS_0_36_1_KEY = "Die Buff-Taste belegt ihre Taste nur, solange es etwas zu zaubern gibt, und setzt sich dann gegen Bartender durch; sonst macht die Taste, was sie vorher tat."
+L.NEWS_0_36_1_STRONGER = "Ein Mitglied mit stärkerem Buff blockiert die Buff-Taste nicht mehr: Es wird zwei Minuten übersprungen."
 L.NEWS_OPEN_SHIELDS = "Schildwache öffnen"

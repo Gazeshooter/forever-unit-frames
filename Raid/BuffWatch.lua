@@ -286,6 +286,31 @@ end
 
 -- The next cast ------------------------------------------------------------------------
 
+-- Members whose cast the client refused because a stronger buff is on them
+-- (a form of the same buff or another that the scan cannot tell apart):
+-- "entry id:member" -> when to try again. The state keeps counting them;
+-- only the casts pass them by, or the same refused cast would come forever.
+BuffWatch.BOUNCE_WAIT = 120
+local bounced = {}
+
+local function bounceKey(entry, guid, unit)
+    return entry.id .. ":" .. (guid or unit)
+end
+
+function BuffWatch.Bounced(cast)
+    bounced[bounceKey(cast.entry, BuffWatch.GUID(cast.unit), cast.unit)] = GetTime() + BuffWatch.BOUNCE_WAIT
+    BuffWatch.Mark()
+end
+
+local function castable(entry, needs)
+    local list = {}
+    for _, need in ipairs(needs) do
+        local key = bounceKey(entry, need.member.guid, need.unit)
+        if not bounced[key] or GetTime() >= bounced[key] then list[#list + 1] = need end
+    end
+    return list
+end
+
 -- Whether a spell reaches the unit: only a plain "no" says it does not
 -- (unknown: in range, the cast fails visibly at worst).
 local function inRange(spell, unit)
@@ -330,10 +355,11 @@ end
 function BuffWatch.Best(st)
     if not BuffWatch.armed or not st or st.unknown or not st.needs or #st.needs == 0 then return nil end
     local entry = st.entry
+    local needs = castable(entry, st.needs)
     if groupReady(entry) then
-        local key = crowdedGroup(entry, st.needs)
+        local key = crowdedGroup(entry, needs)
         if key ~= nil then
-            for _, need in ipairs(st.needs) do
+            for _, need in ipairs(needs) do
                 if groupKey(entry, need.member) == key and inRange(entry.group.id, need.unit) then
                     return { entry = entry, spell = entry.group.id, name = entry.group.name, unit = need.unit,
                         groupForm = true, group = key }
@@ -341,7 +367,7 @@ function BuffWatch.Best(st)
             end
         end
     end
-    for _, need in ipairs(st.needs) do
+    for _, need in ipairs(needs) do
         if inRange(entry.single.id, need.unit) then
             return { entry = entry, spell = entry.single.id, name = entry.single.name, unit = need.unit,
                 groupForm = false }

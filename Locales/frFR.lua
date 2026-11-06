@@ -1420,4 +1420,6 @@ L.NEWS_0_35_0_SEARCH = "Les deux fenêtres d'options ont un champ de recherche d
 L.NEWS_0_35_0_KEYS = "Les touches se définissent maintenant en les pressant : cliquez sur le bouton et appuyez sur la combinaison. Valable pour la touche d'amélioration et les touches de clic."
 L.NEWS_0_35_0_SOLO = "La touche d'amélioration et sa fenêtre peuvent aussi fonctionner en solo, et leurs réglages sont aussi dans l'onglet Groupe du groupe."
 L.NEWS_0_36_0_SORT = "Les cadres de groupe peuvent être triés par rôle : Groupe > Groupe > Trier par rôle."
+L.NEWS_0_36_1_KEY = "La touche d'amélioration n'est prise que s'il y a quelque chose à lancer et passe alors avant Bartender ; sinon, la touche fait comme avant."
+L.NEWS_0_36_1_STRONGER = "Un membre avec une amélioration plus forte ne bloque plus la touche : il est ignoré pendant deux minutes."
 L.NEWS_OPEN_SHIELDS = "Ouvrir la veille des boucliers"

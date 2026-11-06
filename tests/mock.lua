@@ -3438,6 +3438,8 @@ function M.PressBinding(key)
     for _, down in ipairs({ true, false }) do
         if takesStroke(button, mouseButton, down) then
             ran = secureStroke(button, mouseButton, down) or ran
+            local post = button:GetScript("PostClick")
+            if post then post(button, mouseButton, down) end
         end
     end
     return ran

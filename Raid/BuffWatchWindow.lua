@@ -184,6 +184,7 @@ local function row(i)
     -- After the secure click; only the up stroke (rows take both), and
     -- not with Shift, Ctrl or Alt held.
     r:SetScript("PostClick", function(self, button, down)
+        SmartBuff.NoteClick(self)
         if button == "RightButton" and not down and not IsModifierKeyDown() then
             Window.SwitchOff(self.state)
         end
