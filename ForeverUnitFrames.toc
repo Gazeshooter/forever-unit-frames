@@ -2,7 +2,7 @@
 ## Title: Forever Unit Frames
 ## Notes: Clean, flat and fully configurable unit frames for WoW: Forever.
 ## Author: StephanRosin
-## Version: 0.34.2
+## Version: 0.35.0
 ## IconTexture: Interface\AddOns\ForeverUnitFrames\Media\MinimapIcon.tga
 ## AddonCompartmentFunc: ForeverUnitFrames_OnAddonCompartmentClick
 ## AddonCompartmentFuncOnEnter: ForeverUnitFrames_OnAddonCompartmentEnter
@@ -105,6 +105,7 @@ Core\Commands.lua
 Options\Style.lua
 Options\Widgets.lua
 Options\Chrome.lua
+Options\Search.lua
 Options\AuraBlockEditor.lua
 Options\Schema.lua
 Options\TestMode.lua

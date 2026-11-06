@@ -764,8 +764,11 @@ RaidSettings.Define({ key = "buffGroupMin", code = "BN", scope = "general", type
     max = Raid.GROUP_SIZE, default = 3 })
 -- The smart buff key: casts the next buff out of combat (a key as
 -- Raid.ParseKey stores it; "" none).
-RaidSettings.Define({ key = "buffKey", code = "BK", scope = "general", type = "text",
+RaidSettings.Define({ key = "buffKey", code = "BK", scope = "general", type = "text", keyInput = true,
     maxLetters = Raid.CLICK_KEY_LETTERS, check = isKey, default = "" })
+-- Alone too: the watch looks at you alone, the key stays taken, so off by
+-- default.
+RaidSettings.Define({ key = "buffSolo", code = "BJ", scope = "general", type = "bool", default = false })
 -- The watch window: shown in a group (by default only while a buff is
 -- missing or running out), its top-left corner from the screen centre.
 RaidSettings.Define({ key = "buffWatchShow", code = "BW", scope = "general", type = "bool", default = true })

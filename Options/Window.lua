@@ -168,6 +168,7 @@ local ROW_BUILDERS = {
     text = function(parent, def, opts)
         -- A hidden-auras list has an editor of its own.
         if def.blocklist then return ns.AuraBlockEditor.Row(parent, def, opts) end
+        if def.keyInput then return Widgets.KeyInput(parent, opts) end
         opts.maxLetters = def.maxLetters or ns.Settings.TEXT_MAX
         return Widgets.TextInput(parent, opts)
     end,
@@ -291,6 +292,12 @@ local function addSections(page, stack, scope, tab)
             for _, key in ipairs(keys) do stack.add(settingRow(page, scope, key)) end
             if section.frames then frameSwitches(page, stack) end
             if section.action then stack.add(actionBlock(page, section.action)) end
+        end
+        if section.raidKeys then
+            stack.add(sectionHeader(page, section.id))
+            stack.add(noteBlock(page, L["NOTE_" .. section.id]))
+            for _, key in ipairs(section.raidKeys) do stack.add(ns.RaidOptions.SettingRow(page, key)) end
+            page.raidRows = true
         end
     end
 end
@@ -641,11 +648,14 @@ end
 -- reaction whose fading is off; each frame's own switch while "Use unit
 -- frames" is off (its value is kept); Options/Dependencies.lua adds the
 -- switches and modes of the pages.
+-- The buff watch runs only while the raid frames are on.
+local function raidFramesOn() return ns.RaidPanel.Enabled() end
 local ROW_ACTIVE = {
     enabled = function() return ns.Config.Get("general", "unitFrames") end,
     -- Only while the raid window's click-casting is on (off, or automatic
     -- with Clique loaded, it binds nothing anywhere).
     clickCast = function() return ns.ClickCast.On() end,
+    buffKey = raidFramesOn, buffSolo = raidFramesOn, buffWatchShow = raidFramesOn,
     rangeFriendlySpell = function() return ns.Range.ReactionOn("friendly") end,
     rangeFriendlyYards = function() return ns.Range.ReactionOn("friendly") end,
     rangeHostileSpell = function() return ns.Range.ReactionOn("hostile") end,
@@ -921,6 +931,56 @@ end
 
 -- Window ------------------------------------------------------------------------
 
+-- What the title bar's search looks through (Options/Search.lua): the page
+-- shown first, General, then the other frames; a setting several frames
+-- share once, on the first of them. Profiles by its name.
+local function scopeText(scope)
+    if scope == "general" then return L.GENERAL end
+    if scope == "profiles" then return L.NAV_PROFILES end
+    return L["FRAME_" .. scope]
+end
+
+local function searchEntries()
+    local list, seen = {}, {}
+    local function add(scope)
+        for _, tab in ipairs(Schema.Tabs(scope)) do
+            local tabPath = scopeText(scope) .. " > " .. L["TAB_" .. tab.id]
+            if tab.custom then
+                list[#list + 1] = { title = L["TAB_" .. tab.id], path = scopeText(scope), scope = scope, tab = tab.id }
+            end
+            for _, section in ipairs(tab.sections or {}) do
+                for _, key in ipairs(section.raidKeys or {}) do
+                    list[#list + 1] = { title = ns.RaidSchema.Label(key), hint = ns.RaidSchema.Hint(key),
+                        path = tabPath .. " > " .. L["SECTION_" .. section.id], scope = scope, tab = tab.id, key = key }
+                end
+                for _, key in ipairs(Schema.SectionKeys(section, scope)) do
+                    if scope == "general" or not seen[key] then
+                        if scope ~= "general" then seen[key] = true end
+                        list[#list + 1] = { title = L["SETTING_" .. key], hint = hintFor(scope, key),
+                            path = tabPath .. " > " .. L["SECTION_" .. section.id], scope = scope, tab = tab.id,
+                            key = key }
+                    end
+                end
+            end
+        end
+    end
+    local current = Options.currentScope
+    if current and isFrameScope(current) then add(current) end
+    add("general")
+    for _, def in ipairs(ns.Units.List) do
+        if def.key ~= current and (not def.available or def.available()) then add(def.key) end
+    end
+    add("profiles")
+    return list
+end
+
+-- Opens a search result: its page and tab, its row in view.
+function Options.Reveal(entry)
+    Options.Open(entry.scope, entry.tab)
+    if entry.key then ns.OptionsSearch.Reveal(frame.scroll, Options.page, entry.key) end
+    updateScrollbar()
+end
+
 local function createWindow()
     frame = CreateFrame("Frame", WINDOW_NAME, UIParent)
     Options.frame = frame
@@ -934,6 +994,7 @@ local function createWindow()
     Style.Fill(frame, "bg")
     Style.Border(frame)
     frame.titleBar = createTitleBar(frame)
+    Options.searchBox = ns.OptionsSearch.Attach({ bar = frame.titleBar, entries = searchEntries, go = Options.Reveal })
     local footer = createFooter(frame)
     local nav = createNav(frame)
     -- Locked in combat like the footer.
@@ -945,6 +1006,7 @@ local function createWindow()
     -- list and armed confirmations with it.
     frame:SetScript("OnHide", function()
         Widgets.CloseList()
+        Options.searchBox:SetText("")
         Options.resetFrameButton.Disarm()
         if Options.resetAllButton then Options.resetAllButton.Disarm() end
         for _, button in pairs(Options.actionButtons) do button.Disarm() end
@@ -1057,8 +1119,10 @@ end)
 -- either window (or Copy, Clear all) shows here.
 ns.Listen("RAID_CONFIG_CHANGED", function(scope, key)
     if not Options.IsOpen() or (scope ~= nil and scope ~= "general") then return end
-    if Options.page and Options.page.clickCast then forEachRow(function(row) row:Refresh() end) end
-    if key == nil or key == "clickCast" then setRowStates() end
+    if Options.page and (Options.page.clickCast or Options.page.raidRows) then
+        forEachRow(function(row) row:Refresh() end)
+    end
+    if key == nil or key == "clickCast" or key == "enabled" then setRowStates() end
 end)
 
 -- Every label is set once, when its widget is built: a new language gets a

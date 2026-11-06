@@ -90,6 +90,9 @@ Schema.FRAME = {
             "partyPetAuraX", "partyPetAuraY" } },
         { id = "partyTargets", keys = { "partyTargets", "partyTargetSide", "partyTargetWidth", "partyTargetHeight",
             "partyTargetX", "partyTargetY" } },
+        -- The raid window's settings (Raid/Settings.lua), the same values:
+        -- Options/Window.lua builds their rows with that window's.
+        { id = "partyBuffs", keys = {}, raidKeys = { "buffKey", "buffSolo", "buffWatchShow" } },
     } },
     { id = "bars", sections = {
         { id = "health", keys = { "healthColorMode", "healthColor", "reactionFriendlyColor", "reactionNeutralColor",

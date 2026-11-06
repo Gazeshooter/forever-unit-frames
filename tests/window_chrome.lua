@@ -1,6 +1,8 @@
 -- Written from the four windows before they shared Options/Chrome.lua
 -- (tests/chrome.lua); since then only the title bars' field names changed
 -- (title, sub and close in each, as Chrome.TitleBar keeps them).
+-- The two options windows title bars gained the search box and its list
+-- (Options/Search.lua) with 0.35.0; everything else is as written then.
 return {
     unit = {
         "titleBar Frame pts=TOPLEFT TOPRIGHT _attr={} _drag={LeftButton} _h=32.000 _level=2.000 _mouse=true _shown=true _w=0.000 close=titleBar.5 sub=titleBar.4 title=titleBar.3 scripts=OnDragStart,OnDragStop",
@@ -11,6 +13,20 @@ return {
         "titleBar.5 Button pts=RIGHT:titleBar:RIGHT:0.000:0.000 _attr={} _h=32.000 _level=3.000 _shown=true _w=32.000 lines={titleBar.5.1,titleBar.5.2} scripts=OnClick,OnEnter,OnLeave",
         "titleBar.5.1 Texture pts=CENTER _attr={} _color={0.550,0.550,0.580,1.000} _h=2.000 _layer=BORDER _level=4.000 _rotation=0.785 _shown=true _texColor={0.550,0.550,0.580,1.000} _w=14.000 scripts=",
         "titleBar.5.2 Texture pts=CENTER _attr={} _color={0.550,0.550,0.580,1.000} _h=2.000 _layer=BORDER _level=4.000 _rotation=-0.785 _shown=true _texColor={0.550,0.550,0.580,1.000} _w=14.000 scripts=",
+        "titleBar.6 EditBox pts=RIGHT:titleBar.5:LEFT:-4.000:0.000 _attr={} _autoFocus=false _color={0.900,0.900,0.900,1.000} _font={Fonts\\FRIZQT__.TTF,12.000,} _h=20.000 _insets={6.000,6.000,0.000,0.000} _justifyH=LEFT _level=3.000 _shown=true _text= _w=190.000 edges={titleBar.6.2,titleBar.6.3,titleBar.6.4,titleBar.6.5} list=titleBar.7 scripts=OnEditFocusGained,OnEditFocusLost,OnEnterPressed,OnEscapePressed,OnTextChanged",
+        "titleBar.6.1 Texture pts= _allPoints=titleBar.6 _attr={} _color={0.160,0.160,0.190,1.000} _h=0.000 _layer=BACKGROUND _level=4.000 _shown=true _texColor={0.160,0.160,0.190,1.000} _w=0.000 scripts=",
+        "titleBar.6.2 Texture pts=TOPLEFT TOPRIGHT _attr={} _color={0.000,0.000,0.000,1.000} _h=1.000 _layer=BORDER _level=4.000 _shown=true _texColor={0.000,0.000,0.000,1.000} _w=0.000 scripts=",
+        "titleBar.6.3 Texture pts=BOTTOMLEFT BOTTOMRIGHT _attr={} _color={0.000,0.000,0.000,1.000} _h=1.000 _layer=BORDER _level=4.000 _shown=true _texColor={0.000,0.000,0.000,1.000} _w=0.000 scripts=",
+        "titleBar.6.4 Texture pts=TOPLEFT BOTTOMLEFT _attr={} _color={0.000,0.000,0.000,1.000} _h=0.000 _layer=BORDER _level=4.000 _shown=true _texColor={0.000,0.000,0.000,1.000} _w=1.000 scripts=",
+        "titleBar.6.5 Texture pts=TOPRIGHT BOTTOMRIGHT _attr={} _color={0.000,0.000,0.000,1.000} _h=0.000 _layer=BORDER _level=4.000 _shown=true _texColor={0.000,0.000,0.000,1.000} _w=1.000 scripts=",
+        "titleBar.6.6 FontString pts=LEFT:titleBar.6:LEFT:6.000:0.000 _attr={} _color={0.550,0.550,0.580,1.000} _font={Fonts\\FRIZQT__.TTF,12.000,} _h=0.000 _layer=OVERLAY _level=4.000 _shadow={1.000,-1.000} _shown=true _sublevel=0.000 _text=Search settings… _w=0.000 scripts=",
+        "titleBar.7 Frame pts=TOPRIGHT:titleBar.6:BOTTOMRIGHT:0.000:-2.000 _attr={} _h=0.000 _level=3.000 _mouse=true _shown=false _strata=DIALOG _w=400.000 edges={titleBar.7.2,titleBar.7.3,titleBar.7.4,titleBar.7.5} note=titleBar.7.6 rows={} scripts=OnEvent",
+        "titleBar.7.1 Texture pts= _allPoints=titleBar.7 _attr={} _color={0.100,0.100,0.120,1.000} _h=0.000 _layer=BACKGROUND _level=4.000 _shown=true _texColor={0.100,0.100,0.120,1.000} _w=0.000 scripts=",
+        "titleBar.7.2 Texture pts=TOPLEFT TOPRIGHT _attr={} _color={0.000,0.000,0.000,1.000} _h=1.000 _layer=BORDER _level=4.000 _shown=true _texColor={0.000,0.000,0.000,1.000} _w=0.000 scripts=",
+        "titleBar.7.3 Texture pts=BOTTOMLEFT BOTTOMRIGHT _attr={} _color={0.000,0.000,0.000,1.000} _h=1.000 _layer=BORDER _level=4.000 _shown=true _texColor={0.000,0.000,0.000,1.000} _w=0.000 scripts=",
+        "titleBar.7.4 Texture pts=TOPLEFT BOTTOMLEFT _attr={} _color={0.000,0.000,0.000,1.000} _h=0.000 _layer=BORDER _level=4.000 _shown=true _texColor={0.000,0.000,0.000,1.000} _w=1.000 scripts=",
+        "titleBar.7.5 Texture pts=TOPRIGHT BOTTOMRIGHT _attr={} _color={0.000,0.000,0.000,1.000} _h=0.000 _layer=BORDER _level=4.000 _shown=true _texColor={0.000,0.000,0.000,1.000} _w=1.000 scripts=",
+        "titleBar.7.6 FontString pts=BOTTOMLEFT:titleBar.7:BOTTOMLEFT:8.000:6.000 _attr={} _color={0.550,0.550,0.580,1.000} _font={Fonts\\FRIZQT__.TTF,11.000,} _h=0.000 _layer=OVERLAY _level=4.000 _shadow={1.000,-1.000} _shown=true _sublevel=0.000 _w=0.000 scripts=",
         "footer Frame pts=BOTTOMLEFT BOTTOMRIGHT _attr={} _h=40.000 _level=2.000 _shown=true _w=0.000 scripts=",
         "footer.1 Texture pts= _allPoints=footer _attr={} _color={0.100,0.100,0.120,1.000} _h=0.000 _layer=BACKGROUND _level=3.000 _shown=true _texColor={0.100,0.100,0.120,1.000} _w=0.000 scripts=",
         "footer.2 Texture pts=TOPLEFT TOPRIGHT _attr={} _color={0.000,0.000,0.000,1.000} _h=1.000 _layer=BORDER _level=3.000 _shown=true _texColor={0.000,0.000,0.000,1.000} _w=0.000 scripts=",
@@ -72,6 +88,20 @@ return {
         "titleBar.5 Button pts=RIGHT:titleBar:RIGHT:0.000:0.000 _attr={} _h=32.000 _level=3.000 _shown=true _w=32.000 lines={titleBar.5.1,titleBar.5.2} scripts=OnClick,OnEnter,OnLeave",
         "titleBar.5.1 Texture pts=CENTER _attr={} _color={0.550,0.550,0.580,1.000} _h=2.000 _layer=BORDER _level=4.000 _rotation=0.785 _shown=true _texColor={0.550,0.550,0.580,1.000} _w=14.000 scripts=",
         "titleBar.5.2 Texture pts=CENTER _attr={} _color={0.550,0.550,0.580,1.000} _h=2.000 _layer=BORDER _level=4.000 _rotation=-0.785 _shown=true _texColor={0.550,0.550,0.580,1.000} _w=14.000 scripts=",
+        "titleBar.6 EditBox pts=RIGHT:titleBar.5:LEFT:-4.000:0.000 _attr={} _autoFocus=false _color={0.900,0.900,0.900,1.000} _font={Fonts\\FRIZQT__.TTF,12.000,} _h=20.000 _insets={6.000,6.000,0.000,0.000} _justifyH=LEFT _level=3.000 _shown=true _text= _w=190.000 edges={titleBar.6.2,titleBar.6.3,titleBar.6.4,titleBar.6.5} list=titleBar.7 scripts=OnEditFocusGained,OnEditFocusLost,OnEnterPressed,OnEscapePressed,OnTextChanged",
+        "titleBar.6.1 Texture pts= _allPoints=titleBar.6 _attr={} _color={0.160,0.160,0.190,1.000} _h=0.000 _layer=BACKGROUND _level=4.000 _shown=true _texColor={0.160,0.160,0.190,1.000} _w=0.000 scripts=",
+        "titleBar.6.2 Texture pts=TOPLEFT TOPRIGHT _attr={} _color={0.000,0.000,0.000,1.000} _h=1.000 _layer=BORDER _level=4.000 _shown=true _texColor={0.000,0.000,0.000,1.000} _w=0.000 scripts=",
+        "titleBar.6.3 Texture pts=BOTTOMLEFT BOTTOMRIGHT _attr={} _color={0.000,0.000,0.000,1.000} _h=1.000 _layer=BORDER _level=4.000 _shown=true _texColor={0.000,0.000,0.000,1.000} _w=0.000 scripts=",
+        "titleBar.6.4 Texture pts=TOPLEFT BOTTOMLEFT _attr={} _color={0.000,0.000,0.000,1.000} _h=0.000 _layer=BORDER _level=4.000 _shown=true _texColor={0.000,0.000,0.000,1.000} _w=1.000 scripts=",
+        "titleBar.6.5 Texture pts=TOPRIGHT BOTTOMRIGHT _attr={} _color={0.000,0.000,0.000,1.000} _h=0.000 _layer=BORDER _level=4.000 _shown=true _texColor={0.000,0.000,0.000,1.000} _w=1.000 scripts=",
+        "titleBar.6.6 FontString pts=LEFT:titleBar.6:LEFT:6.000:0.000 _attr={} _color={0.550,0.550,0.580,1.000} _font={Fonts\\FRIZQT__.TTF,12.000,} _h=0.000 _layer=OVERLAY _level=4.000 _shadow={1.000,-1.000} _shown=true _sublevel=0.000 _text=Search settings… _w=0.000 scripts=",
+        "titleBar.7 Frame pts=TOPRIGHT:titleBar.6:BOTTOMRIGHT:0.000:-2.000 _attr={} _h=0.000 _level=3.000 _mouse=true _shown=false _strata=DIALOG _w=400.000 edges={titleBar.7.2,titleBar.7.3,titleBar.7.4,titleBar.7.5} note=titleBar.7.6 rows={} scripts=OnEvent",
+        "titleBar.7.1 Texture pts= _allPoints=titleBar.7 _attr={} _color={0.100,0.100,0.120,1.000} _h=0.000 _layer=BACKGROUND _level=4.000 _shown=true _texColor={0.100,0.100,0.120,1.000} _w=0.000 scripts=",
+        "titleBar.7.2 Texture pts=TOPLEFT TOPRIGHT _attr={} _color={0.000,0.000,0.000,1.000} _h=1.000 _layer=BORDER _level=4.000 _shown=true _texColor={0.000,0.000,0.000,1.000} _w=0.000 scripts=",
+        "titleBar.7.3 Texture pts=BOTTOMLEFT BOTTOMRIGHT _attr={} _color={0.000,0.000,0.000,1.000} _h=1.000 _layer=BORDER _level=4.000 _shown=true _texColor={0.000,0.000,0.000,1.000} _w=0.000 scripts=",
+        "titleBar.7.4 Texture pts=TOPLEFT BOTTOMLEFT _attr={} _color={0.000,0.000,0.000,1.000} _h=0.000 _layer=BORDER _level=4.000 _shown=true _texColor={0.000,0.000,0.000,1.000} _w=1.000 scripts=",
+        "titleBar.7.5 Texture pts=TOPRIGHT BOTTOMRIGHT _attr={} _color={0.000,0.000,0.000,1.000} _h=0.000 _layer=BORDER _level=4.000 _shown=true _texColor={0.000,0.000,0.000,1.000} _w=1.000 scripts=",
+        "titleBar.7.6 FontString pts=BOTTOMLEFT:titleBar.7:BOTTOMLEFT:8.000:6.000 _attr={} _color={0.550,0.550,0.580,1.000} _font={Fonts\\FRIZQT__.TTF,11.000,} _h=0.000 _layer=OVERLAY _level=4.000 _shadow={1.000,-1.000} _shown=true _sublevel=0.000 _w=0.000 scripts=",
         "footer Frame pts=BOTTOMLEFT BOTTOMRIGHT _attr={} _h=40.000 _level=2.000 _shown=true _w=0.000 scripts=",
         "footer.1 Texture pts= _allPoints=footer _attr={} _color={0.100,0.100,0.120,1.000} _h=0.000 _layer=BACKGROUND _level=3.000 _shown=true _texColor={0.100,0.100,0.120,1.000} _w=0.000 scripts=",
         "footer.2 Texture pts=TOPLEFT TOPRIGHT _attr={} _color={0.000,0.000,0.000,1.000} _h=1.000 _layer=BORDER _level=3.000 _shown=true _texColor={0.000,0.000,0.000,1.000} _w=0.000 scripts=",

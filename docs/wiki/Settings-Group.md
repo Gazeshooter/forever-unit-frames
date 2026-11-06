@@ -2,7 +2,7 @@
 
 # Settings: Group
 
-The party only: how the members are arranged, their pets and their targets.
+The party only: how the members are arranged, their pets and their targets. Its Buffs section at the end holds the raid window's smart buff key, Also when solo and the buff window's switch: the same values, in effect while the raid frames are on.
 
 The **Group** tab on each frame's page in `/fuf`. The last column says which frames have the option; a default that differs per frame is listed per frame.
 

@@ -5,7 +5,8 @@ local _, ns = ...
 -- of combat only and at most every THROTTLE seconds after a change (an
 -- aura, the roster, the bags, the spell book, a setting), and in a group
 -- every RESCAN seconds anyway (a buff runs out without an event). Solo
--- nothing is watched; with the raid frames off nothing is scanned. In
+-- nothing is watched unless buffSolo says so (then only you, no pet); with
+-- the raid frames off nothing is scanned. In
 -- combat the last state stays. Members the client cannot see are left
 -- out. Every value read from the client is checked with Secrets.IsSecret
 -- before it is compared or used; while the client keeps auras secret
@@ -107,8 +108,14 @@ function BuffWatch.GUID(unit)
     return token(Secrets.Call(UnitGUID, unit))
 end
 
+-- Whether anyone is watched: in a group, or alone with buffSolo.
+function BuffWatch.Active()
+    return IsInGroup() or general("buffSolo") == true
+end
+
 -- The members: { unit, group (raid group; 1 in a party), class (token,
--- nil while unknown), tank, guid (nil while unknown) }; empty when solo.
+-- nil while unknown), tank, guid (nil while unknown) }; empty when not
+-- Active.
 function BuffWatch.Members()
     local list = {}
     if IsInRaid() then
@@ -121,7 +128,7 @@ function BuffWatch.Members()
                     tank = isTank(unit, token(role)), guid = BuffWatch.GUID(unit) }
             end
         end
-    elseif IsInGroup() then
+    elseif BuffWatch.Active() then
         local units = { "player" }
         for i = 1, GetNumGroupMembers() - 1 do units[#units + 1] = "party" .. i end
         for _, unit in ipairs(units) do
@@ -253,8 +260,7 @@ end
 -- Out of combat: the state anew; in combat nothing (the last one stays).
 function BuffWatch.Scan()
     if InCombatLockdown() then return end
-    -- Solo: nothing is watched.
-    local watched = IsInGroup() and BuffWatch.Watched() or {}
+    local watched = BuffWatch.Active() and BuffWatch.Watched() or {}
     local wasEmpty = #BuffWatch.state.entries == 0
     BuffWatch.armed = true
     BuffWatch.scans = BuffWatch.scans + 1
@@ -364,7 +370,7 @@ local driver = CreateFrame("Frame")
 driver:SetScript("OnUpdate", function(_, elapsed)
     BuffWatch.since = BuffWatch.since + elapsed
     if InCombatLockdown() or not ns.RaidPanel.Enabled() then return end
-    local rescan = BuffWatch.since >= BuffWatch.RESCAN and IsInGroup()
+    local rescan = BuffWatch.since >= BuffWatch.RESCAN and BuffWatch.Active()
     if (BuffWatch.dirty and BuffWatch.since >= BuffWatch.THROTTLE) or rescan then
         BuffWatch.Scan()
     end
@@ -390,7 +396,7 @@ ns.On("SPELLS_CHANGED", BuffWatch.Mark)
 ns.On("PLAYER_REGEN_ENABLED", BuffWatch.Mark)
 
 -- The buff watch's settings: no panel of the raid frames follows them.
-BuffWatch.KEYS = { buffExpiring = true, buffGroupMin = true, buffKey = true, buffWatchShow = true,
+BuffWatch.KEYS = { buffExpiring = true, buffGroupMin = true, buffKey = true, buffSolo = true, buffWatchShow = true,
     buffWatchOnlyMissing = true, buffWatchX = true, buffWatchY = true, buffCellIcon = true,
     buffCellIconPoint = true, [Data.BLESSINGS_KEY] = true }
 for _, buff in ipairs(Data.BUFFS) do BuffWatch.KEYS[buff.key] = true end

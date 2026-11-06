@@ -841,6 +841,120 @@ function Widgets.Button(parent, opts)
     return button
 end
 
+-- Key button ----------------------------------------------------------------
+-- Shows a key; a click takes the next key pressed, with its modifiers, as
+-- the client names it ("CTRL-SHIFT-F"), and hands it to opts.set (false:
+-- refused, the border flashes). Escape or a click ends it unchanged, a
+-- right click clears the key. The frame takes the keyboard only while it
+-- waits, and never in combat: SetEnabled(false) ends it.
+
+local MODIFIER_KEYS = { LSHIFT = true, RSHIFT = true, LCTRL = true, RCTRL = true, LALT = true, RALT = true }
+local MOUSE_KEYS = { MiddleButton = "BUTTON3", Button4 = "BUTTON4", Button5 = "BUTTON5" }
+
+local function heldModifiers()
+    return (IsAltKeyDown() and "ALT-" or "") .. (IsControlKeyDown() and "CTRL-" or "")
+        .. (IsShiftKeyDown() and "SHIFT-" or "")
+end
+
+-- opts: get, set, width. Placed by the caller. button.Commit(text) stores
+-- a key, button.ShowValue() shows the stored one.
+function Widgets.KeyButton(parent, opts)
+    local button = Widgets.Button(parent, { text = "", width = opts.width or Widgets.CONTROL_W, onClick = function() end })
+    button:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+    local waiting = false
+
+    function button.ShowValue()
+        if waiting then return end
+        local key = opts.get() or ""
+        button.text:SetText(key ~= "" and key or L.KEY_BUTTON_NONE)
+    end
+    local function stop()
+        if not waiting then return end
+        waiting = false
+        button:EnableKeyboard(false)
+        button:EnableMouseWheel(false)
+        button:UnregisterEvent("GLOBAL_MOUSE_DOWN")
+        button.ShowValue()
+    end
+    function button.Commit(text)
+        stop()
+        if opts.set(text) == false then flashError(button) end
+        button.ShowValue()
+    end
+    function button.IsWaiting() return waiting end
+
+    local function start()
+        -- A text box holding the focus would get the key instead.
+        local focus = rawget(_G, "GetCurrentKeyBoardFocus") and GetCurrentKeyBoardFocus()
+        if focus then focus:ClearFocus() end
+        waiting = true
+        button.text:SetText(L.KEY_BUTTON_PROMPT)
+        button:EnableKeyboard(true)
+        button:EnableMouseWheel(true)
+        button:RegisterEvent("GLOBAL_MOUSE_DOWN")
+    end
+    button:SetScript("OnClick", function(_, mouse)
+        if waiting then
+            stop()
+        elseif mouse == "RightButton" then
+            button.Commit("")
+        else
+            start()
+        end
+    end)
+    button:SetScript("OnKeyDown", function(_, key)
+        if key == "ESCAPE" then
+            stop()
+        elseif not MODIFIER_KEYS[key] then
+            button.Commit(heldModifiers() .. key)
+        end
+    end)
+    button:SetScript("OnMouseDown", function(_, mouse)
+        if waiting and MOUSE_KEYS[mouse] then button.Commit(heldModifiers() .. MOUSE_KEYS[mouse]) end
+    end)
+    button:SetScript("OnMouseWheel", function(_, delta)
+        button.Commit(heldModifiers() .. (delta > 0 and "MOUSEWHEELUP" or "MOUSEWHEELDOWN"))
+    end)
+    button:SetScript("OnEvent", function(self)
+        if not self:IsMouseOver() then stop() end
+    end)
+    button:SetScript("OnHide", stop)
+    button:HookScript("OnEnter", function(self)
+        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+        GameTooltip:SetText(L.KEY_BUTTON_TIP, 1, 1, 1, 1, true)
+        GameTooltip:Show()
+    end)
+    button:HookScript("OnLeave", function(self)
+        if GameTooltip:IsOwned(self) then GameTooltip:Hide() end
+    end)
+    local setEnabled = button.SetEnabled
+    function button:SetEnabled(on)
+        if not on then stop() end
+        setEnabled(self, on)
+    end
+    button.ShowValue()
+    return button
+end
+
+-- A row with a key button across the control column.
+function Widgets.KeyInput(parent, opts)
+    local row = newRow(parent, opts)
+    local button = Widgets.KeyButton(row, opts)
+    button:SetPoint("LEFT", row, "LEFT", Widgets.CONTROL_X, 0)
+    button:SetHeight(TEXT_INPUT_H)
+    trackHover(row, button)
+    row.keyBox = button
+    function row:Refresh()
+        button.ShowValue()
+        row:RefreshInherit()
+    end
+    function row:SetEnabled(on)
+        button:SetEnabled(on)
+        dimRow(row, on)
+    end
+    return row
+end
+
 -- TextArea ------------------------------------------------------------------
 
 local AREA_PADDING = 6

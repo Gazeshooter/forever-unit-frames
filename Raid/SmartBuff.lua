@@ -10,8 +10,8 @@ local _, ns = ...
 -- key does nothing; after combat the next scan sets it again. After a
 -- roster change it casts nothing until the next scan (BuffWatch.armed:
 -- the unit tokens may name other members). The key is
--- bound while the raid frames are on, you are in a group and a buff is
--- watched; bindings change out of combat only.
+-- bound while the raid frames are on, you are in a group (or alone with
+-- buffSolo) and a buff is watched; bindings change out of combat only.
 local SmartBuff = {}
 ns.SmartBuff = SmartBuff
 
@@ -49,7 +49,7 @@ end
 
 -- Whether the key is bound.
 function SmartBuff.Wanted()
-    if not (ns.RaidPanel.Enabled() and IsInGroup()) then return false end
+    if not (ns.RaidPanel.Enabled() and ns.RaidBuffWatch.Active()) then return false end
     return #ns.RaidBuffWatch.Watched() > 0
 end
 
@@ -105,7 +105,7 @@ ns.On("PLAYER_REGEN_DISABLED", function()
 end)
 ns.Listen("RAID_BUFFS_CHANGED", queue)
 ns.On("GROUP_ROSTER_UPDATE", queue)
-local KEYS = { buffKey = true, enabled = true }
+local KEYS = { buffKey = true, buffSolo = true, enabled = true }
 ns.Listen("RAID_CONFIG_CHANGED", function(scope, key)
     if scope == nil or key == nil or KEYS[key] then queue() end
 end)

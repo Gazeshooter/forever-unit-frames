@@ -12,7 +12,7 @@ local function def(key)
 end
 local CODES = {
     buffFortitude = "BF", buffSpirit = "BR", buffShadowProtection = "BH", buffIntellect = "BA", buffWild = "BC",
-    buffThorns = "BQ", buffBlessings = "BO", buffExpiring = "BE", buffGroupMin = "BN", buffKey = "BK",
+    buffThorns = "BQ", buffBlessings = "BO", buffExpiring = "BE", buffGroupMin = "BN", buffKey = "BK", buffSolo = "BJ",
     buffWatchShow = "BW", buffWatchOnlyMissing = "BM", buffWatchX = "BX", buffWatchY = "BY", buffCellIcon = "BI",
     buffCellIconPoint = "BP",
     blessingWARRIOR = "ZW", blessingPALADIN = "ZP", blessingPRIEST = "ZR", blessingSHAMAN = "ZC", blessingDRUID = "ZD",

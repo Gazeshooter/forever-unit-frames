@@ -55,9 +55,7 @@ H.check("after combat", enabled("buffKey"), true)
 
 -- The key: typed in any spelling, stored as the client names it.
 local function enter(text)
-    local row = rowFor("buffKey")
-    M.Type(row.edit, text)
-    M.PressEnter(row.edit)
+    rowFor("buffKey").keyBox.Commit(text)
 end
 enter("shift-b")
 H.check("stored", RC.Get("general", "buffKey"), "SHIFT-B")
@@ -71,8 +69,7 @@ H.check("a click-casting key's: refused", RC.Get("general", "buffKey"), "SHIFT-B
 H.check("says so", M.chat[#M.chat]:find(L.RAID_TYPED_KEY_TWICE:format("F"), 1, true) ~= nil, true)
 RO.SelectTab("clickCast")
 local keyRow = rowFor("clickKey2")
-M.Type(keyRow.keyBox, "shift-b")
-M.PressEnter(keyRow.keyBox)
+keyRow.keyBox.Commit("shift-b")
 H.check("the smart buff key's: refused for a click key", RC.Get("general", "clickKey2"), "")
 RO.SelectTab("buffs")
 enter("")

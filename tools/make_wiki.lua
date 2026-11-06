@@ -126,7 +126,7 @@ end
 -- What each frame tab is for (the page's first line).
 local TAB_INTRO = {
     layout = "Size, position, the rows of the frame, portrait, border and corners, shadow.",
-    group = "The party only: how the members are arranged, their pets and their targets.",
+    group = "The party only: how the members are arranged, their pets and their targets. Its Buffs section at the end holds the raid window's smart buff key, Also when solo and the buff window's switch: the same values, in effect while the raid frames are on.",
     bars = "Colors and textures of the bars, shields, incoming heals, power colors and the druid's mana.",
     text = "What the texts on the title row and the bars show, the damage and heal numbers, how the texts read,"
         .. " and the font.",
@@ -401,7 +401,7 @@ local RAID_TAB_INTRO = {
         .. " gray); the gear in the window's header opens a menu to choose the watched buffs, and a right click on"
         .. " a buff stops watching it. Members too far away for the client to see are not counted. By default it shows only"
         .. " while something is missing or running out. A click on its row casts it on the member who needs it most, and the **smart buff key** (set"
-        .. " here, not one of the click-casting keys; taken while you are in a group) casts the next buff of all"
+        .. " here, not one of the click-casting keys; taken while you are in a group, or alone with **Also when solo**) casts the next buff of all"
         .. " of them. The group form (Prayer of Fortitude, Arcane Brilliance, Gift of the Wild, a greater"
         .. " blessing, which takes a Symbol of Kings and blesses a whole class) is cast when enough members of one"
         .. " group miss it or have it running out and its reagent is in your bags; otherwise the single form, on the member with the least"

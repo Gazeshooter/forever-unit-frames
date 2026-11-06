@@ -94,6 +94,9 @@ News.ENTRIES = {
     ["0.34.0"] = {
         lines = { "NEWS_0_34_0_COMBAT", "NEWS_0_34_0_CASTBAR", "NEWS_0_34_0_MORE" },
     },
+    ["0.35.0"] = {
+        lines = { "NEWS_0_35_0_SEARCH", "NEWS_0_35_0_KEYS", "NEWS_0_35_0_SOLO" },
+    },
 }
 
 -- The version this client loaded (## Version in the TOC).

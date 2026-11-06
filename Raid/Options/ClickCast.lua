@@ -237,7 +237,7 @@ local function slotRow(page, slot, layout)
     return row
 end
 
--- A typed key: the client's spelling, not taken by another slot or the
+-- A key pressed: the client's spelling, not taken by another slot or the
 -- smart buff key (Raid/SmartBuff.lua).
 local function storeKey(slot, text)
     local key = Raid.ParseKey(text)
@@ -267,8 +267,8 @@ end
 local function keyRow(page, slot, layout)
     local row = bindingDropdown(page, slot.bind, Raid.CLICK_KEY_KINDS, L.RAID_CLICK_KEY_N:format(slot.index),
         function() return takenText(slot) end)
-    row.keyBox = Widgets.TextBox(row, {
-        width = layout.keyW, maxLetters = Raid.CLICK_KEY_LETTERS,
+    row.keyBox = Widgets.KeyButton(row, {
+        width = layout.keyW,
         get = function() return get(slot.key) end,
         set = function(text) return storeKey(slot, text) end,
     })
@@ -279,11 +279,10 @@ local function keyRow(page, slot, layout)
     local refresh, setEnabled = row.Refresh, row.SetEnabled
     function row:Refresh()
         refresh(self)
-        if not self.keyBox:HasFocus() then self.keyBox.ShowValue() end
+        self.keyBox.ShowValue()
     end
     function row:SetEnabled(on)
         setEnabled(self, on)
-        if not on then self.keyBox:ClearFocus() end
         self.keyBox:SetEnabled(on)
     end
     row.key = slot.key

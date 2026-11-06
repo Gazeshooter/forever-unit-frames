@@ -76,3 +76,7 @@ Blizzard's raid frames are back. `/fuf raid on` switches them on again. Please r
 What's New window, `/fuf news`), comment on CurseForge or open an issue on GitHub. The more exact the
 better: which frame, which tab and setting, what you expected, the Lua error's text, and other addons
 involved.
+
+### Finding a setting
+
+Both options windows (`/fuf` and `/fuf raid`) have a search box in their title bar. Type part of a setting's name or hint: a click on a result (Enter: the first) opens its page with the setting in view. In `/fuf` it looks through the page you are on, General and the other frames; in `/fuf raid` through General and the size you are editing.

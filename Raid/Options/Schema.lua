@@ -135,7 +135,7 @@ Schema.TABS = {
     { id = "buffs", note = "buffs", sections = {
         { id = "buffsWatched", keys = buffKeys() },
         { id = "blessings", keys = ns.Raid.BLESSING_KEYS },
-        { id = "buffRules", keys = { "buffExpiring", "buffGroupMin", "buffKey" } },
+        { id = "buffRules", keys = { "buffExpiring", "buffGroupMin", "buffKey", "buffSolo" } },
         { id = "buffWindow", keys = { "buffWatchShow", "buffWatchOnlyMissing", "buffWatchX", "buffWatchY" } },
         { id = "buffCell", keys = { "buffCellIcon", "buffCellIconPoint" } },
     } },

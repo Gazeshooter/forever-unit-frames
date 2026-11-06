@@ -9,7 +9,7 @@ local _, ns = ...
 -- with those members' names (Raid/BuffWatchNames.lua). Each row is a
 -- secure action button: a click casts that buff on whoever needs it most
 -- (BuffWatch.Best), its spell and unit set out of combat. It shows in a
--- group while the raid frames are on and a buff is watched (with "only
+-- group (or alone with buffSolo) while the raid frames are on and a buff is watched (with "only
 -- when missing": while one is missing or running out), and in raid test
 -- mode so it can be placed (solo: a block per watched buff, without
 -- counts or names, so it has its size in a group); its own mover (the
@@ -56,7 +56,7 @@ end
 function Window.Shown()
     if not (Panel.Enabled() and general("buffWatchShow")) then return false end
     if testing() then return true end
-    if not IsInGroup() or #Watch.state.entries == 0 then return false end
+    if not Watch.Active() or #Watch.state.entries == 0 then return false end
     return not general("buffWatchOnlyMissing") or anyNeeded()
 end
 

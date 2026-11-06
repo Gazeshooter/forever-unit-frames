@@ -689,6 +689,33 @@ end
 
 -- Window ------------------------------------------------------------------------
 
+-- What the title bar's search looks through (Options/Search.lua): General's
+-- tabs, the tabs of the size edited now, and Profiles by its name.
+local function searchEntries()
+    local list = {}
+    for _, tab in ipairs(Schema.TABS) do
+        local part = groupOf(tab) == "general" and L.RAID_GENERAL_TAB or sizeText(RaidOptions.Size())
+        local tabTitle = Schema.TabTitle(tab.id)
+        if tab.custom then list[#list + 1] = { title = tabTitle, path = part, tab = tab.id } end
+        for _, section in ipairs(tab.sections) do
+            for _, key in ipairs(section.keys) do
+                list[#list + 1] = { title = Schema.Label(key), hint = Schema.Hint(key),
+                    path = part .. " > " .. tabTitle .. " > " .. Schema.SectionTitle(section.id), tab = tab.id,
+                    key = key }
+            end
+        end
+    end
+    list[#list + 1] = { title = L.RAID_PROFILES_TAB, path = L.RAID_WINDOW_TITLE, tab = "profiles" }
+    return list
+end
+
+-- Opens a search result: its tab, its row in view.
+function RaidOptions.Reveal(entry)
+    RaidOptions.SelectTab(entry.tab)
+    if entry.key then ns.OptionsSearch.Reveal(frame.scroll, RaidOptions.page, entry.key) end
+    updateScrollbar()
+end
+
 local function createWindow()
     frame = CreateFrame("Frame", WINDOW_NAME, UIParent)
     RaidOptions.frame = frame
@@ -702,6 +729,8 @@ local function createWindow()
     Style.Fill(frame, "bg")
     Style.Border(frame)
     frame.titleBar = createTitleBar(frame)
+    RaidOptions.searchBox = ns.OptionsSearch.Attach({ bar = frame.titleBar, entries = searchEntries,
+        go = RaidOptions.Reveal })
     createSizeBar(frame, frame.titleBar)
     local footer = createFooter(frame)
     createBody(frame, frame.sizeBar, footer)
@@ -712,6 +741,7 @@ local function createWindow()
     -- mode: the panel shows the active size again.
     frame:SetScript("OnHide", function()
         Widgets.CloseList()
+        RaidOptions.searchBox:SetText("")
         disarmAll()
         ns.RaidTestMode.Set(false)
         ns.RaidTestMode.Preview(nil)
