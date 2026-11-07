@@ -1454,7 +1454,7 @@ L.NEWS_OPEN_SHIELDS = "Open the shield watch"
 
 -- Custom contribution strings (kept separate from upstream)
 L.ENUM_CUSTOM = "Custom expression"
-L.HINT_CUSTOM_EXPRESSION = "[shortname] = O. W.; [firstname] [lastinitial] = Olivine W. Also [guild], [classification], [creaturetype], [threatpct], [combo], [curxp], [perxp], [currep], [perrep], [status]. [guild|No guild] is a fallback; [?combat|In combat|Safe] is conditional; [perhp:1] shows one decimal. Full tag list in README."
+L.HINT_CUSTOM_EXPRESSION = "[shortname] = J. D.; [firstname] [lastinitial] = Jane D. Also [guild], [classification], [creaturetype], [threatpct], [combo], [curxp], [perxp], [currep], [perrep], [status]. [guild|No guild] is a fallback; [?combat|In combat|Safe] is conditional; [perhp:1] shows one decimal. Full tag list in README."
 L.SETTING_titleTextCustom = "Title left expression"; L.HINT_titleTextCustom = L.HINT_CUSTOM_EXPRESSION
 L.SETTING_titleTextCenterCustom = "Title centre expression"; L.HINT_titleTextCenterCustom = L.HINT_CUSTOM_EXPRESSION
 L.SETTING_titleTextRightCustom = "Title right expression"; L.HINT_titleTextRightCustom = L.HINT_CUSTOM_EXPRESSION
